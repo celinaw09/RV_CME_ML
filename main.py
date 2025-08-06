@@ -205,8 +205,25 @@ def main():
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
-        acc = 100 * correct / total
-        print(f"Epoch {epoch+1}, Loss: {running_loss:.4f}, Accuracy: {acc:.2f}%")
+        train_acc = 100 * correct / total
+        print(f"Epoch {epoch+1}, Loss: {running_loss:.4f}, Training Accuracy: {train_acc:.2f}%")
+
+        # Evaluate every 10 epochs
+        if (epoch + 1) % 10 == 0:
+            model.eval()
+            correct_test = 0
+            total_test = 0
+
+            with torch.no_grad():
+                for inputs, labels in test_loader:
+                    inputs, labels = inputs.to(device), labels.to(device)
+                    outputs = model(inputs)
+                    _, predicted = torch.max(outputs.data, 1)
+                    total_test += labels.size(0)
+                    correct_test += (predicted == labels).sum().item()
+
+            test_acc = 100 * correct_test / total_test
+            print(f">>> Test Accuracy after epoch {epoch+1}: {test_acc:.2f}%")
 
 
 
