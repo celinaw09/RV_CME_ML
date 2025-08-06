@@ -11,9 +11,12 @@ from utils.test import test
 import matplotlib.pyplot as plt
 from utils.misc_utils import build_classification_dataset, resize_images
 from dataset.dataset import EyeFFEDataset
+from collections import Counter
 from torch.utils.data import DataLoader, Dataset
+import torchvision.models as models
 from sklearn.model_selection import train_test_split
 import torch
+from torchsummary import summary
 from PIL import Image
 import pandas as pd
 import numpy as np
@@ -21,7 +24,39 @@ import numpy as np
 import os
 import re
 
+def count_labels_in_dataloader(dataloader):
+        label_counter = Counter()
+        for _, labels in dataloader:
+            label_counter.update(labels.tolist())
+        return label_counter
 
+def build_resnet_for_grayscale(num_classes=2):
+    model = models.resnet18(pretrained=True)  # or resnet50, resnet34, etc.
+
+    # Modify first conv layer to accept 1-channel input
+    model.conv1 = nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3, bias=False)
+
+    # Replace the final FC layer to match your number of classes
+    num_ftrs = model.fc.in_features
+    model.fc = nn.Linear(num_ftrs, num_classes)
+
+    return model
+
+
+print(torch.__version__)
+gpu = 0
+# Check if specified GPU is available, else default to CPU
+if torch.cuda.is_available():
+    try:
+        device = torch.device(f"cuda:{gpu}")
+        # Test if the specified GPU index is valid
+        _ = torch.cuda.get_device_name(device)
+    except AssertionError:
+        print(f"GPU {gpu} is not available. Falling back to GPU 0.")
+        device = torch.device("cuda:0")
+else:
+    print("CUDA is not available. Using CPU.")
+    device = torch.device("cpu")
 
 
 def main():
@@ -48,19 +83,24 @@ def main():
 
     # === Step 2: Define transform
     transform = transforms.Compose([
-        # transforms.Resize((320, 320)),  # or (224, 224) for ResNet
-        transforms.Grayscale(num_output_channels=1),
-        transforms.ToTensor(),
-        # transforms.Normalize(mean=[0.5], std=[0.5])
-    ])
+    transforms.Grayscale(num_output_channels=3),  # duplicate grayscale to RGB
+    transforms.Resize((320, 320)),  # optional
+    transforms.ToTensor(),
+])
 
 
     dataset = EyeFFEDataset(df_final, transform=transform)
     dataloader = DataLoader(dataset, batch_size=16, shuffle=True, num_workers=4)
 
-    images_train, labels_train = next(iter(dataloader))
-    print(f"Image batch shape: {images_train.shape}")
-    print(f"Label batch shape: {labels_train.shape}")
+    # Usage
+    label_distribution = count_labels_in_dataloader(dataloader)
+    print("Label distribution in dataloader:")
+    for label, count in sorted(label_distribution.items()):
+        print(f"Label {label}: {count} samples")
+
+        images_train, labels_train = next(iter(dataloader))
+        print(f"Image batch shape: {images_train.shape}")
+        print(f"Label batch shape: {labels_train.shape}")
 
 
     # images_test, labels_test = next(iter(dataloader))
@@ -86,15 +126,40 @@ def main():
     print(f"Image shape: {image.shape}, Label: {label}")
     print(f"Min: {image.min().item():.4f}, Max: {image.max().item():.4f}")
 
-    # Convert tensor to numpy array and move channel to last dimension
-    image_np = image.permute(1, 2, 0).numpy()  # Now shape: [224, 224, 3]
+    model = build_resnet_for_grayscale(num_classes=2)  # or use unmodified ResNet if using Grayscale(3)
+    model = model.to(device)
+    channels = 1
+    H = 320
+    W = 320
+    # Now log it
+    input_size=(channels, H, W)
+    summary(model, input_size=(1, 320, 320), batch_size=1, device="cuda" if torch.cuda.is_available() else "cpu")
+    num_epochs = 10
+    criterion = nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
 
-    # Plot using matplotlib
-    plt.imshow(image.squeeze(0), cmap='gray')  # squeeze channel for display
-    plt.title(f"Sample idx: {sample_idx_within_batch} | Label: {label}")
-    plt.axis('off')
-    plt.savefig(f'Sample idx_{sample_idx_within_batch}_image_grayscale.png', dpi=300)
-    plt.close()
+    for epoch in range(num_epochs):
+        model.train()
+        running_loss = 0.0
+        correct = 0
+        total = 0
+
+        for inputs, labels in dataloader:
+            inputs, labels = inputs.to(device), labels.to(device)
+
+            optimizer.zero_grad()
+            outputs = model(inputs)
+            loss = criterion(outputs, labels)
+            loss.backward()
+            optimizer.step()
+
+            running_loss += loss.item()
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+
+        acc = 100 * correct / total
+        print(f"Epoch {epoch+1}, Loss: {running_loss:.4f}, Accuracy: {acc:.2f}%")
 
 
 
@@ -104,77 +169,7 @@ def main():
 
 
 
-
-    # idx = 10
-    # row = df_final.iloc[idx]
-
-    # print(row)
-
-    # # Load and display the image
-    # img_path = row['image_path']
-    # label = row['label']
-
-    # image = Image.open(img_path)
-
-    # plt.imshow(image)
-    # plt.title(f"Label: {label} | Eye: {row['eye']}")
-    # plt.axis('off')
-    # plt.savefig(f'Sample idx_{idx}_imagefromcsv.png', dpi=300)
-    # plt.close()
-
-    # # Convert to NumPy array
-    # img_array = np.array(image)
-
-    # # Print shape
-    # print(f"Image shape: {img_array.shape}")  # (H, W, C)
-    # # df_final.to_csv("faa_image_classification_dataset_final.csv", index=False)
    
-    # # img_size = 224  # or 320 if that's your original image shape
-
-    # transform = transforms.Compose([
-    #     transforms.ToTensor(),
-    #     transforms.Normalize(mean=[0.5]*3, std=[0.5]*3),
-    # ])
-    
-
-    # df_train, df_test = train_test_split(df_final, test_size=0.1, stratify=df_final["label"], random_state=42)
-
-    # df_train.to_csv("train.csv", index=False)
-    # df_test.to_csv("test.csv", index=False)
-
-    # train_dataset = EyeFFEDataset(csv_file="train.csv", transform=transform)
-    # test_dataset = EyeFFEDataset(csv_file="test.csv", transform=transform)
-
-    # train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True, num_workers=4)
-    # test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False, num_workers=4)
-
-    # images_train, labels_train = next(iter(train_loader))
-    # print(f"Image batch shape: {images_train.shape}")
-    # print(f"Label batch shape: {labels_train.shape}")
-
-
-    # images_test, labels_test = next(iter(test_loader))
-    # print(f"Image batch shape: {images_test.shape}")
-    # print(f"Label batch shape: {labels_test.shape}")
-
-    # sample_idx = 12
-    # images, labels = next(iter(train_loader))
-
-    # # Pick sample at index 12
-    # image = images[sample_idx]         # Tensor: [3, 224, 224]
-    # label = labels[sample_idx]
-
-    # print(f"Sample image shape: {image.shape}")  # Should be [3, 224, 224]
-
-    # # Convert tensor to numpy array and move channel to last dimension
-    # image_np = image.permute(1, 2, 0).numpy()  # Now shape: [224, 224, 3]
-
-    # # Plot using matplotlib
-    # plt.imshow(image_np)
-    # plt.title(f"Sample idx: {sample_idx} | Label: {label}")
-    # plt.axis('off')
-    # plt.savefig(f'Sample idx_{sample_idx}_RGB_image.png', dpi=300)
-    # plt.close()
     
    # why are all sample points having the same label? Is shuffling not happening?
    # # do we need to reshape 320X320 to 224X224 to run ResNet on it?
