@@ -66,7 +66,13 @@ def main():
     df_final = build_classification_dataset("/data2/users/koushani/chbmit/data/allpatients_resized")
     total_images = len(df_final)
     print(f"Total number of data points (images): {total_images}")
-    sample_idx = 10
+    print(df_final.columns)
+    label_mapping = {'non_CME': 0, 'CME': 1}
+    df_final['label'] = df_final['label'].map(label_mapping)
+    print("Label column type:", df_final['label'].dtype)
+    print("Unique values in 'label':", df_final['label'].unique())
+    print("Value counts:\n", df_final['label'].value_counts())
+    
     # row = df_final.iloc[idx]
     # img_path = row["image_path"]
     # label = row["label"]
@@ -80,27 +86,68 @@ def main():
     # plt.axis("off")
     # plt.savefig(f"sample_{idx}_original_image.png", dpi=300)
     # plt.close()
+    
+    # Split by label
+    df_label_0 = df_final[df_final['label'] == 0]
+    df_label_1 = df_final[df_final['label'] == 1]
+
+    print("Label 0 count:", len(df_label_0))
+    print("Label 1 count:", len(df_label_1))
+
+    # Sample 15 from label 0 and 5 from label 1
+    df_test_0 = df_label_0.sample(n=15, random_state=42)
+    df_test_1 = df_label_1.sample(n=5, random_state=42)
+
+    # Combine and form test set
+    df_test = pd.concat([df_test_0, df_test_1])
+    df_train = df_final.drop(df_test.index)
+
+    # Save to CSV
+    df_train.to_csv("train.csv", index=False)
+    df_test.to_csv("test.csv", index=False)
+
+    # Print label distributions
+    print("Train label distribution:")
+    print(df_train["label"].value_counts())
+
+    print("\nTest label distribution:")
+    print(df_test["label"].value_counts())
 
     # === Step 2: Define transform
     transform = transforms.Compose([
-    transforms.Grayscale(num_output_channels=3),  # duplicate grayscale to RGB
+    transforms.Grayscale(num_output_channels=1),  # duplicate grayscale to RGB
     transforms.Resize((320, 320)),  # optional
     transforms.ToTensor(),
 ])
 
 
-    dataset = EyeFFEDataset(df_final, transform=transform)
-    dataloader = DataLoader(dataset, batch_size=16, shuffle=True, num_workers=4)
+    train_dataset = EyeFFEDataset(df_train, transform=transform)
+    train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True, num_workers=4)
+
+    test_dataset = EyeFFEDataset(df_test, transform=transform)
+    test_loader = DataLoader(test_dataset, batch_size=16, shuffle=True, num_workers=4)
 
     # Usage
-    label_distribution = count_labels_in_dataloader(dataloader)
-    print("Label distribution in dataloader:")
-    for label, count in sorted(label_distribution.items()):
+    train_label_distribution = count_labels_in_dataloader(train_loader)
+    print("Label distribution in training dataloader:")
+    for label, count in sorted(train_label_distribution.items()):
         print(f"Label {label}: {count} samples")
 
-        images_train, labels_train = next(iter(dataloader))
+        images_train, labels_train = next(iter(train_loader))
         print(f"Image batch shape: {images_train.shape}")
         print(f"Label batch shape: {labels_train.shape}")
+
+
+    test_label_distribution = count_labels_in_dataloader(test_loader)
+    print("Label distribution in testing dataloader:")
+    for label, count in sorted(test_label_distribution.items()):
+        print(f"Label {label}: {count} samples")
+
+        images_train, labels_train = next(iter(test_loader))
+        print(f"Image batch shape: {images_train.shape}")
+        print(f"Label batch shape: {labels_train.shape}")
+
+    
 
 
     # images_test, labels_test = next(iter(dataloader))
@@ -112,7 +159,7 @@ def main():
     sample_idx_within_batch = 5 # e.g., 6th sample in that batch
 
     # Create the iterator
-    dataloader_iter = iter(dataloader)
+    dataloader_iter = iter(train_loader)
 
     # Iterate up to the target batch
     for current_batch_idx in range(target_batch_idx + 1):
@@ -134,9 +181,9 @@ def main():
     # Now log it
     input_size=(channels, H, W)
     summary(model, input_size=(1, 320, 320), batch_size=1, device="cuda" if torch.cuda.is_available() else "cpu")
-    num_epochs = 10
+    num_epochs = 50
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 
     for epoch in range(num_epochs):
         model.train()
@@ -144,7 +191,7 @@ def main():
         correct = 0
         total = 0
 
-        for inputs, labels in dataloader:
+        for inputs, labels in train_loader:
             inputs, labels = inputs.to(device), labels.to(device)
 
             optimizer.zero_grad()
