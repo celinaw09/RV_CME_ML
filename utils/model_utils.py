@@ -35,57 +35,85 @@ def load_checkpoint(checkpoint_path, model, optimizer=None, map_location="cuda")
 
 def get_probs_and_preds_from_outputs(outputs):
     """
-    Convert model outputs to:
-      - y_scores: probability scores suitable for ROC/PR (shape (N, n_classes) or (N,) for binary)
-      - y_pred: predicted class indices (N,)
-    Accepts:
-      - outputs raw logits (shape (N, C)) or (N,) for binary logit
-      - outputs already softmaxed (probabilities)
+    Accepts: torch.Tensor outputs from model (logits or probs)
+    Returns:
+      - probs_or_scores: np.ndarray, either shape (B,) for binary or (B,C) for multiclass
+      - preds: np.ndarray shape (B,) of predicted class indices (0..C-1) or {0,1} for binary
+    Handles:
+      - outputs shape (B,)  -> single-logit? treat as binary logit
+      - outputs shape (B,1) -> binary logit -> squeeze to (B,)
+      - outputs shape (B,C) -> multiclass logits or probs -> softmax if logits
     """
-    with torch.no_grad():
-        out = outputs.detach().cpu()
-        if out.ndim == 1 or (out.ndim == 2 and out.size(1) == 1):
-            # binary single-logit case
-            # if shape (N,1) squeeze it
-            if out.ndim == 2:
-                out = out.squeeze(1)
-            probs = torch.sigmoid(out).numpy()  # shape (N,)
-            preds = (probs >= 0.5).astype(int)
-            return probs, preds
-        elif out.ndim == 2 and out.size(1) >= 2:
-            # multi-class logits/probs
-            # convert to probabilities with softmax if logits
-            # check range to see if likely probs or logits
-            if (out.min().item() < 0) or (out.max().item() > 1):
-                # treat as logits -> softmax
-                probs = torch.softmax(out, dim=1).numpy()
-            else:
-                probs = out.numpy()
-            preds = np.argmax(probs, axis=1)
-            return probs, preds
+    # Convert to tensor on cpu
+    if isinstance(outputs, dict):
+        # common pattern if model returns dict
+        # try common keys
+        for k in ('logits','out','output'):
+            if k in outputs:
+                outputs = outputs[k]
+                break
         else:
-            raise ValueError(f"Unexpected output shape: {out.shape}")
+            raise ValueError("Model returned dict but no `logits`/`out`/`output` key found.")
+    if isinstance(outputs, torch.Tensor):
+        out = outputs.detach().cpu()
+    else:
+        # assume numpy-like
+        out = torch.tensor(outputs).detach().cpu()
+
+    # deal with shapes
+    if out.ndim == 1:
+        # treat as binary logits -> probability
+        probs = torch.sigmoid(out).numpy()             # (B,)
+        preds = (probs >= 0.5).astype(int)
+        return probs, preds
+
+    if out.ndim == 2 and out.size(1) == 1:
+        out1 = out.squeeze(1)                         # (B,)
+        probs = torch.sigmoid(out1).numpy()
+        preds = (probs >= 0.5).astype(int)
+        return probs, preds
+
+    if out.ndim == 2 and out.size(1) >= 2:
+        # multiclass: determine if logits or probs
+        arr = out.numpy()
+        # heuristic: if values outside [0,1] -> logits
+        if arr.min() < 0 or arr.max() > 1:
+            probs = torch.softmax(out, dim=1).numpy()
+        else:
+            probs = arr
+        preds = np.argmax(probs, axis=1)
+        return probs, preds
+
+    raise ValueError(f"Unexpected model output shape: {out.shape}")
         
 
-def evaluate_loader(model, loader, criterion=None, device=DEVICE, multilabel=False):
+
+# ---- robust evaluate_loader ----
+def evaluate_loader(model, loader, criterion=None, device=None, debug=False):
     """
-    Runs model over loader and returns aggregated metrics & raw arrays.
-    Returns dict:
-        { 'y_true', 'y_pred', 'y_scores', 'loss', 'accuracy', 'precision', 'recall', 'f1', 'roc' , 'pr' , 'auc_roc', 'auc_pr' }
+    Evaluate model on loader. Handles binary (N,) or (N,1) and multiclass (N,C).
+    Returns dict with metrics and ROC/PR curves.
+    Set debug=True to print shapes and unique labels.
     """
+    if device is None:
+        device = next(model.parameters()).device
+
     model.eval()
-    ys = []
-    y_preds = []
-    y_scores_list = []  # either shape (N,) for binary or (N, C) for multiclass
+    all_y_true = []
+    all_y_pred = []
+    all_scores = []
     losses = []
+    total_samples = 0
+
     with torch.no_grad():
         for batch in loader:
             if isinstance(batch, (list, tuple)) and len(batch) >= 2:
                 inputs, labels = batch[0], batch[1]
             else:
-                raise RuntimeError("Loader must return (inputs, labels).")
+                raise RuntimeError("Loader must return (inputs, labels) pairs.")
             inputs = inputs.to(device)
             labels = labels.to(device)
+
             outputs = model(inputs)
 
             # compute loss if possible
@@ -94,74 +122,97 @@ def evaluate_loader(model, loader, criterion=None, device=DEVICE, multilabel=Fal
                     loss_val = criterion(outputs, labels).item()
                     losses.append(loss_val * inputs.size(0))
                 except Exception:
-                    # can't compute loss (e.g., shapes mismatch); skip
+                    # skip if shapes mismatch
                     pass
 
             probs_or_scores, preds = get_probs_and_preds_from_outputs(outputs)
-            # attach
-            if isinstance(probs_or_scores, np.ndarray):
-                y_scores_list.append(probs_or_scores)
-            else:
-                y_scores_list.append(probs_or_scores.numpy())
-            y_preds.append(preds)
-            ys.append(labels.detach().cpu().numpy())
+
+            all_scores.append(probs_or_scores)
+            all_y_pred.append(preds)
+            all_y_true.append(labels.detach().cpu().numpy())
+            total_samples += labels.size(0)
 
     # concat
-    y_true = np.concatenate(ys, axis=0)
-    y_pred = np.concatenate(y_preds, axis=0)
-    y_scores_arr = np.concatenate(y_scores_list, axis=0)
+    y_true = np.concatenate(all_y_true, axis=0)
+    y_pred = np.concatenate(all_y_pred, axis=0)
+    y_scores = np.concatenate(all_scores, axis=0)
 
-    # compute averaged loss
-    total_examples = sum([s.size(0) for s in getattr(loader, "batch_sampler").sampler.__iter__()], 0) if False else None
-    # simpler: average using counts from concatenation
-    avg_loss = (sum(losses) / len(y_true)) if (len(losses) > 0) else None
+    # DEBUG prints so we can see what shapes are actually flowing
+    if debug:
+        print("DEBUG evaluate_loader:")
+        print("  y_true.shape:", y_true.shape, "unique labels:", np.unique(y_true))
+        print("  y_pred.shape:", y_pred.shape, "unique preds:", np.unique(y_pred))
+        print("  y_scores.shape:", y_scores.shape, "dtype:", y_scores.dtype)
+        # show a few score values
+        print("  y_scores sample:", y_scores.ravel()[:8])
 
-    # basic metrics
+    # Normalize single-column case (N,1) -> (N,)
+    if y_scores.ndim == 2 and y_scores.shape[1] == 1:
+        y_scores = y_scores.squeeze(1)
+
+    avg_loss = (sum(losses) / total_samples) if (len(losses) > 0 and total_samples > 0) else None
     acc = accuracy_score(y_true, y_pred)
 
-    # precision/recall/f1: choose average depending on classes
-    # if binary (y_scores_arr.ndim==1 or y_pred in {0,1})
-    if y_scores_arr.ndim == 1:
+    # Binary branch
+    if y_scores.ndim == 1:
         prec = precision_score(y_true, y_pred, zero_division=0)
         rec = recall_score(y_true, y_pred, zero_division=0)
         f1 = f1_score(y_true, y_pred, zero_division=0)
-        # ROC/PR curves
-        fpr, tpr, _ = roc_curve(y_true, y_scores_arr)
+
+        fpr, tpr, _ = roc_curve(y_true, y_scores)
         roc_auc = auc(fpr, tpr)
-        precs, recs, _ = precision_recall_curve(y_true, y_scores_arr)
+
+        precs, recs, _ = precision_recall_curve(y_true, y_scores)
         pr_auc = auc(recs, precs)
-        aps = average_precision_score(y_true, y_scores_arr)
+        aps = average_precision_score(y_true, y_scores)
+
         roc_curves = (fpr, tpr)
         pr_curves = (recs, precs)
+
+    # Multiclass branch
     else:
-        # multiclass case -> use one-vs-rest for ROC
-        n_classes = y_scores_arr.shape[1]
-        y_true_bin = label_binarize(y_true, classes=list(range(n_classes)))
+        n_classes = y_scores.shape[1]
+        # if labels are not 0..n_classes-1, remap
+        unique_labels = np.unique(y_true)
+        if not np.array_equal(unique_labels, np.arange(len(unique_labels))) or len(unique_labels) != n_classes:
+            mapping = {v: i for i, v in enumerate(unique_labels)}
+            y_true_mapped = np.array([mapping[v] for v in y_true])
+            y_true_bin = label_binarize(y_true_mapped, classes=list(range(len(unique_labels))))
+        else:
+            y_true_bin = label_binarize(y_true, classes=list(range(n_classes)))
+
         try:
-            roc_auc = roc_auc_score(y_true_bin, y_scores_arr, average="macro", multi_class="ovr")
+            roc_auc = roc_auc_score(y_true_bin, y_scores, average="macro", multi_class="ovr")
         except Exception:
             roc_auc = None
-        # compute micro-averaged PR-auc (average_precision_score can compute macro)
+
         try:
-            pr_auc = average_precision_score(y_true_bin, y_scores_arr, average="macro")
+            pr_auc = average_precision_score(y_true_bin, y_scores, average="macro")
         except Exception:
             pr_auc = None
+
         prec = precision_score(y_true, y_pred, average="macro", zero_division=0)
         rec = recall_score(y_true, y_pred, average="macro", zero_division=0)
         f1 = f1_score(y_true, y_pred, average="macro", zero_division=0)
-        # produce per-class ROC curves (return dict)
+
         roc_curves = {}
         pr_curves = {}
-        for c in range(n_classes):
-            fpr, tpr, _ = roc_curve(y_true_bin[:, c], y_scores_arr[:, c])
-            roc_curves[c] = (fpr, tpr)
-            precs, recs, _ = precision_recall_curve(y_true_bin[:, c], y_scores_arr[:, c])
-            pr_curves[c] = (recs, precs)
+        for c in range(y_scores.shape[1]):
+            try:
+                fpr, tpr, _ = roc_curve(y_true_bin[:, c], y_scores[:, c])
+                roc_curves[c] = (fpr, tpr)
+            except Exception:
+                roc_curves[c] = (None, None)
+            try:
+                precs, recs, _ = precision_recall_curve(y_true_bin[:, c], y_scores[:, c])
+                pr_curves[c] = (recs, precs)
+            except Exception:
+                pr_curves[c] = (None, None)
 
     return {
         "y_true": y_true,
         "y_pred": y_pred,
-        "y_scores": y_scores_arr,
+        "y_scores": y_scores,
         "loss": avg_loss,
         "accuracy": acc,
         "precision": prec,
@@ -247,45 +298,143 @@ def plot_bar_metrics(train_metrics, val_metrics, out_dir="plots"):
     plt.close()
 
 def plot_roc_pr(train_metrics, val_metrics, out_dir="plots"):
+    """
+    Robust plotting of ROC and Precision-Recall curves.
+    - train_metrics["roc_curves"] / ["pr_curves"] may be:
+        * tuple: (fpr, tpr) or (recall, precision) for binary
+        * dict: {class_id: (fpr, tpr) or (rec, prec)} for multiclass
+        * some entries may be (None, None) when the curve couldn't be computed
+    """
     os.makedirs(out_dir, exist_ok=True)
-    # ROC
+
+    # ---------- ROC ----------
     plt.figure(figsize=(6,6))
-    if isinstance(train_metrics["roc_curves"], dict):
-        # multiclass: plot per-class ROC for readability (train & val)
-        for c, (fpr, tpr) in train_metrics["roc_curves"].items():
-            plt.plot(fpr, tpr, linestyle='--', alpha=0.6, label=f"train class {c}")
-        for c, (fpr, tpr) in val_metrics["roc_curves"].items():
-            plt.plot(fpr, tpr, label=f"val class {c}")
+    skipped_train = []
+    skipped_val = []
+
+    # multiclass case if roc_curves is dict
+    if isinstance(train_metrics["roc_curves"], dict) or isinstance(val_metrics["roc_curves"], dict):
+        # plot per-class; iterate over union of class keys
+        train_rc = train_metrics["roc_curves"]
+        val_rc = val_metrics["roc_curves"]
+        all_classes = sorted(set(list(train_rc.keys()) + list(val_rc.keys())))
+        for c in all_classes:
+            # train
+            tr = train_rc.get(c, (None, None))
+            if tr is None or tr[0] is None or tr[1] is None:
+                skipped_train.append(c)
+            else:
+                fpr, tpr = tr
+                plt.plot(fpr, tpr, linestyle='--', alpha=0.6, label=f"train class {c}")
+
+            # val
+            vr = val_rc.get(c, (None, None))
+            if vr is None or vr[0] is None or vr[1] is None:
+                skipped_val.append(c)
+            else:
+                fpr, tpr = vr
+                auc_label = ""
+                try:
+                    auc_val = val_metrics.get("roc_auc")
+                    if isinstance(auc_val, dict):
+                        auc_label = f" (AUC={auc_val.get(c):.3f})"
+                    elif isinstance(auc_val, (float, int)):
+                        auc_label = f" (AUC={auc_val:.3f})"
+                except Exception:
+                    auc_label = ""
+                plt.plot(fpr, tpr, label=f"val class {c}{auc_label}")
     else:
-        fpr_t, tpr_t = train_metrics["roc_curves"]
-        fpr_v, tpr_v = val_metrics["roc_curves"]
-        plt.plot(fpr_t, tpr_t, linestyle='--', label=f"train (AUC={train_metrics['roc_auc']:.3f})")
-        plt.plot(fpr_v, tpr_v, label=f"val (AUC={val_metrics['roc_auc']:.3f})")
+        # binary case: tuples expected
+        try:
+            fpr_t, tpr_t = train_metrics["roc_curves"]
+            if fpr_t is not None and tpr_t is not None:
+                plt.plot(fpr_t, tpr_t, linestyle='--', label=f"train (AUC={train_metrics.get('roc_auc', float('nan')):.3f})")
+            else:
+                skipped_train.append("binary")
+        except Exception:
+            skipped_train.append("binary")
+
+        try:
+            fpr_v, tpr_v = val_metrics["roc_curves"]
+            if fpr_v is not None and tpr_v is not None:
+                plt.plot(fpr_v, tpr_v, label=f"val (AUC={val_metrics.get('roc_auc', float('nan')):.3f})")
+            else:
+                skipped_val.append("binary")
+        except Exception:
+            skipped_val.append("binary")
+
     plt.plot([0,1],[0,1],'k:', alpha=0.3)
     plt.xlabel("FPR")
     plt.ylabel("TPR")
     plt.title("ROC curve")
     plt.legend(loc="lower right")
     plt.grid(True)
+    plt.tight_layout()
     plt.savefig(os.path.join(out_dir, "roc_curve.png"))
     plt.close()
 
-    # Precision-Recall
+    if skipped_train or skipped_val:
+        print(f"plot_roc_pr: skipped ROC plotting for train classes: {skipped_train}, val classes: {skipped_val}")
+
+    # ---------- Precision-Recall ----------
     plt.figure(figsize=(6,6))
-    if isinstance(train_metrics["pr_curves"], dict):
-        for c, (rec, prec) in train_metrics["pr_curves"].items():
-            plt.plot(rec, prec, linestyle='--', alpha=0.6, label=f"train class {c}")
-        for c, (rec, prec) in val_metrics["pr_curves"].items():
-            plt.plot(rec, prec, label=f"val class {c}")
+    skipped_train_pr = []
+    skipped_val_pr = []
+
+    if isinstance(train_metrics["pr_curves"], dict) or isinstance(val_metrics["pr_curves"], dict):
+        train_pc = train_metrics["pr_curves"]
+        val_pc = val_metrics["pr_curves"]
+        all_classes = sorted(set(list(train_pc.keys()) + list(val_pc.keys())))
+        for c in all_classes:
+            tr = train_pc.get(c, (None, None))
+            if tr is None or tr[0] is None or tr[1] is None:
+                skipped_train_pr.append(c)
+            else:
+                rec, prec = tr
+                plt.plot(rec, prec, linestyle='--', alpha=0.6, label=f"train class {c}")
+            vr = val_pc.get(c, (None, None))
+            if vr is None or vr[0] is None or vr[1] is None:
+                skipped_val_pr.append(c)
+            else:
+                rec, prec = vr
+                ap_label = ""
+                try:
+                    ap_val = val_metrics.get("pr_auc")
+                    if isinstance(ap_val, dict):
+                        ap_label = f" (AP={ap_val.get(c):.3f})"
+                    elif isinstance(ap_val, (float, int)):
+                        ap_label = f" (AP={ap_val:.3f})"
+                except Exception:
+                    ap_label = ""
+                plt.plot(rec, prec, label=f"val class {c}{ap_label}")
     else:
-        rec_t, prec_t = train_metrics["pr_curves"]
-        rec_v, prec_v = val_metrics["pr_curves"]
-        plt.plot(rec_t, prec_t, linestyle='--', label=f"train (AP={train_metrics['pr_auc']:.3f})")
-        plt.plot(rec_v, prec_v, label=f"val (AP={val_metrics['pr_auc']:.3f})")
+        # binary case: tuples expected (rec, prec)
+        try:
+            rec_t, prec_t = train_metrics["pr_curves"]
+            if rec_t is not None and prec_t is not None:
+                plt.plot(rec_t, prec_t, linestyle='--', label=f"train (AP={train_metrics.get('pr_auc', float('nan')):.3f})")
+            else:
+                skipped_train_pr.append("binary")
+        except Exception:
+            skipped_train_pr.append("binary")
+
+        try:
+            rec_v, prec_v = val_metrics["pr_curves"]
+            if rec_v is not None and prec_v is not None:
+                plt.plot(rec_v, prec_v, label=f"val (AP={val_metrics.get('pr_auc', float('nan')):.3f})")
+            else:
+                skipped_val_pr.append("binary")
+        except Exception:
+            skipped_val_pr.append("binary")
+
     plt.xlabel("Recall")
     plt.ylabel("Precision")
     plt.title("Precision-Recall curve")
     plt.legend(loc="lower left")
     plt.grid(True)
+    plt.tight_layout()
     plt.savefig(os.path.join(out_dir, "pr_curve.png"))
     plt.close()
+
+    if skipped_train_pr or skipped_val_pr:
+        print(f"plot_roc_pr: skipped PR plotting for train classes: {skipped_train_pr}, val classes: {skipped_val_pr}")

@@ -8,6 +8,7 @@ from torch.optim.lr_scheduler import StepLR
 from model.model import Net , RNN_Net
 from utils.train import train
 from utils.test import test
+from utils.model_utils import *
 import matplotlib.pyplot as plt
 from utils.misc_utils import build_classification_dataset, resize_images
 from dataset.dataset import EyeFFEDataset
@@ -173,7 +174,12 @@ def main():
     print(f"Image shape: {image.shape}, Label: {label}")
     print(f"Min: {image.min().item():.4f}, Max: {image.max().item():.4f}")
 
+    CHECKPOINT_PATH = "/data2/users/koushani/chbmit/Root/src/checkpoints/best_model.pth"
+
     model = build_resnet_for_grayscale(num_classes=2)  # or use unmodified ResNet if using Grayscale(3)
+
+    ckpt = load_checkpoint(CHECKPOINT_PATH, model, optimizer=None, map_location=device)
+
     model = model.to(device)
     channels = 1
     H = 320
@@ -185,78 +191,124 @@ def main():
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
 
-    save_dir = "/data2/users/koushani/chbmit/Root/src/checkpoints"                 # <-- change this to your desired folder
-    os.makedirs(save_dir, exist_ok=True)
+    out_dir = "/data2/users/koushani/chbmit/Root/plots"
+    os.makedirs(out_dir, exist_ok=True)
 
-    best_test_acc = 0.0
-    best_path = os.path.join(save_dir, "best_model.pth")
-    last_path  = os.path.join(save_dir, "last_checkpoint.pth")
+    # Case A: history present in checkpoint
+    history_keys = ["train_losses", "val_losses", "train_accs", "val_accs"]
+    if all(k in ckpt for k in history_keys):
+        print("Found training history in checkpoint — plotting epoch curves.")
+        history = {k: ckpt[k] for k in ckpt if isinstance(ckpt[k], (list, tuple)) or k in history_keys}
+        # ensure required keys exist
+        history = {
+            "train_losses": ckpt.get("train_losses"),
+            "val_losses": ckpt.get("val_losses"),
+            "train_accs": ckpt.get("train_accs"),
+            "val_accs": ckpt.get("val_accs"),
+            "train_roc_auc": ckpt.get("train_roc_auc"),
+            "val_roc_auc": ckpt.get("val_roc_auc"),
+            "train_pr_auc": ckpt.get("train_pr_auc"),
+            "val_pr_auc": ckpt.get("val_pr_auc"),
+        }
+        plot_epoch_curves(history, out_dir=out_dir)
+        print(f"Saved epoch curves to {out_dir}")
+        # still compute one-shot evaluation for ROC/PR if user wants
+    else:
+        print("No epoch history in checkpoint — will compute metrics on train & val loaders now.")
 
-    for epoch in range(num_epochs):
-        model.train()
-        running_loss = 0.0
-        correct = 0
-        total = 0
+    # Compute metrics on full train & val sets (one-shot)
+    train_metrics = evaluate_loader(model, train_loader, criterion=criterion, device=device)
+    val_metrics = evaluate_loader(model, test_loader, criterion=criterion, device=device)
 
-        for inputs, labels in train_loader:
-            inputs, labels = inputs.to(device), labels.to(device)
+    print("Train metrics:")
+    for k in ["accuracy", "loss", "precision", "recall", "f1", "roc_auc", "pr_auc"]:
+        print(f"  {k}: {train_metrics.get(k)}")
+    print("Val metrics:")
+    for k in ["accuracy", "loss", "precision", "recall", "f1", "roc_auc", "pr_auc"]:
+        print(f"  {k}: {val_metrics.get(k)}")
 
-            optimizer.zero_grad()
-            outputs = model(inputs)
-            loss = criterion(outputs, labels)
-            loss.backward()
-            optimizer.step()
+    # plot bar metrics
+    plot_bar_metrics(train_metrics, val_metrics, out_dir=out_dir)
+    # plot ROC / PR curves
+    plot_roc_pr(train_metrics, val_metrics, out_dir=out_dir)
 
-            running_loss += loss.item()
-            _, predicted = torch.max(outputs.data, 1)
-            total += labels.size(0)
-            correct += (predicted == labels).sum().item()
+    print("Plots saved to:", os.path.abspath(out_dir))
 
-        train_acc = 100 * correct / total
-        print(f"Epoch {epoch+1}, Loss: {running_loss:.4f}, Training Accuracy: {train_acc:.2f}%")
 
-        # Evaluate every 10 epochs
-        if (epoch + 1) % 10 == 0:
-            model.eval()
-            correct_test = 0
-            total_test = 0
 
-            with torch.no_grad():
-                for inputs, labels in test_loader:
-                    inputs, labels = inputs.to(device), labels.to(device)
-                    outputs = model(inputs)
-                    _, predicted = torch.max(outputs.data, 1)
-                    total_test += labels.size(0)
-                    correct_test += (predicted == labels).sum().item()
 
-            test_acc = 100 * correct_test / total_test
-            print(f">>> Test Accuracy after epoch {epoch+1}: {test_acc:.2f}%")
+    # save_dir = "/data2/users/koushani/chbmit/Root/src/checkpoints"                 # <-- change this to your desired folder
+    # os.makedirs(save_dir, exist_ok=True)
 
-            # Save best model (by test accuracy)
-            if test_acc > best_test_acc:
-                best_test_acc = test_acc
-                torch.save({
-                    "epoch": epoch + 1,
-                    "model_state_dict": model.state_dict(),
-                    "optimizer_state_dict": optimizer.state_dict(),
-                    "best_test_acc": best_test_acc,
-                    "train_loss": running_loss
-                }, best_path)
-                print(f"Saved new best model to: {best_path} (test_acc={best_test_acc:.2f}%)")
+    # best_test_acc = 0.0
+    # best_path = os.path.join(save_dir, "best_model.pth")
+    # last_path  = os.path.join(save_dir, "last_checkpoint.pth")
 
-        # optional: save a rolling/last checkpoint every epoch (keeps training resumable)
+    # for epoch in range(num_epochs):
+    #     model.train()
+    #     running_loss = 0.0
+    #     correct = 0
+    #     total = 0
+
+    #     for inputs, labels in train_loader:
+    #         inputs, labels = inputs.to(device), labels.to(device)
+
+    #         optimizer.zero_grad()
+    #         outputs = model(inputs)
+    #         loss = criterion(outputs, labels)
+    #         loss.backward()
+    #         optimizer.step()
+
+    #         running_loss += loss.item()
+    #         _, predicted = torch.max(outputs.data, 1)
+    #         total += labels.size(0)
+    #         correct += (predicted == labels).sum().item()
+
+    #     train_acc = 100 * correct / total
+    #     print(f"Epoch {epoch+1}, Loss: {running_loss:.4f}, Training Accuracy: {train_acc:.2f}%")
+
+    #     # Evaluate every 10 epochs
+    #     if (epoch + 1) % 10 == 0:
+    #         model.eval()
+    #         correct_test = 0
+    #         total_test = 0
+
+    #         with torch.no_grad():
+    #             for inputs, labels in test_loader:
+    #                 inputs, labels = inputs.to(device), labels.to(device)
+    #                 outputs = model(inputs)
+    #                 _, predicted = torch.max(outputs.data, 1)
+    #                 total_test += labels.size(0)
+    #                 correct_test += (predicted == labels).sum().item()
+
+    #         test_acc = 100 * correct_test / total_test
+    #         print(f">>> Test Accuracy after epoch {epoch+1}: {test_acc:.2f}%")
+
+    #         # Save best model (by test accuracy)
+    #         if test_acc > best_test_acc:
+    #             best_test_acc = test_acc
+    #             torch.save({
+    #                 "epoch": epoch + 1,
+    #                 "model_state_dict": model.state_dict(),
+    #                 "optimizer_state_dict": optimizer.state_dict(),
+    #                 "best_test_acc": best_test_acc,
+    #                 "train_loss": running_loss
+    #             }, best_path)
+    #             print(f"Saved new best model to: {best_path} (test_acc={best_test_acc:.2f}%)")
+
+    #     # optional: save a rolling/last checkpoint every epoch (keeps training resumable)
         
 
-    # final save at end of training (timestamped)
-    ts = time.strftime("%Y%m%d_%H%M%S")
-    final_path = os.path.join(save_dir, f"model_final_{ts}.pth")
-    torch.save({
-        "epoch": num_epochs,
-        "model_state_dict": model.state_dict(),
-        "optimizer_state_dict": optimizer.state_dict(),
-        "best_test_acc": best_test_acc
-    }, final_path)
-    print(f"Training finished. Final model saved to: {final_path}")
+    # # final save at end of training (timestamped)
+    # ts = time.strftime("%Y%m%d_%H%M%S")
+    # final_path = os.path.join(save_dir, f"model_final_{ts}.pth")
+    # torch.save({
+    #     "epoch": num_epochs,
+    #     "model_state_dict": model.state_dict(),
+    #     "optimizer_state_dict": optimizer.state_dict(),
+    #     "best_test_acc": best_test_acc
+    # }, final_path)
+    # print(f"Training finished. Final model saved to: {final_path}")
             
 
 
