@@ -20,7 +20,7 @@ from torchsummary import summary
 from PIL import Image
 import pandas as pd
 import numpy as np
-
+import time
 import os
 import re
 
@@ -183,7 +183,14 @@ def main():
     summary(model, input_size=(1, 320, 320), batch_size=1, device="cuda" if torch.cuda.is_available() else "cpu")
     num_epochs = 50
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
+
+    save_dir = "/data2/users/koushani/chbmit/Root/src/checkpoints"                 # <-- change this to your desired folder
+    os.makedirs(save_dir, exist_ok=True)
+
+    best_test_acc = 0.0
+    best_path = os.path.join(save_dir, "best_model.pth")
+    last_path  = os.path.join(save_dir, "last_checkpoint.pth")
 
     for epoch in range(num_epochs):
         model.train()
@@ -224,6 +231,33 @@ def main():
 
             test_acc = 100 * correct_test / total_test
             print(f">>> Test Accuracy after epoch {epoch+1}: {test_acc:.2f}%")
+
+            # Save best model (by test accuracy)
+            if test_acc > best_test_acc:
+                best_test_acc = test_acc
+                torch.save({
+                    "epoch": epoch + 1,
+                    "model_state_dict": model.state_dict(),
+                    "optimizer_state_dict": optimizer.state_dict(),
+                    "best_test_acc": best_test_acc,
+                    "train_loss": running_loss
+                }, best_path)
+                print(f"Saved new best model to: {best_path} (test_acc={best_test_acc:.2f}%)")
+
+        # optional: save a rolling/last checkpoint every epoch (keeps training resumable)
+        
+
+    # final save at end of training (timestamped)
+    ts = time.strftime("%Y%m%d_%H%M%S")
+    final_path = os.path.join(save_dir, f"model_final_{ts}.pth")
+    torch.save({
+        "epoch": num_epochs,
+        "model_state_dict": model.state_dict(),
+        "optimizer_state_dict": optimizer.state_dict(),
+        "best_test_acc": best_test_acc
+    }, final_path)
+    print(f"Training finished. Final model saved to: {final_path}")
+            
 
 
 
