@@ -96,8 +96,8 @@ def main():
     print("Label 1 count:", len(df_label_1))
 
     # Sample 15 from label 0 and 5 from label 1
-    df_test_0 = df_label_0.sample(n=15, random_state=42)
-    df_test_1 = df_label_1.sample(n=5, random_state=42)
+    df_test_0 = df_label_0.sample(n=40, random_state=42)
+    df_test_1 = df_label_1.sample(n=20, random_state=42)
 
     # Combine and form test set
     df_test = pd.concat([df_test_0, df_test_1])
@@ -187,142 +187,75 @@ def main():
     # Now log it
     input_size=(channels, H, W)
     summary(model, input_size=(1, 320, 320), batch_size=1, device="cuda" if torch.cuda.is_available() else "cpu")
-    num_epochs = 50
+    num_epochs = 100
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
 
     out_dir = "/data2/users/koushani/chbmit/Root/plots"
     os.makedirs(out_dir, exist_ok=True)
 
-    # Case A: history present in checkpoint
-    history_keys = ["train_losses", "val_losses", "train_accs", "val_accs"]
-    if all(k in ckpt for k in history_keys):
-        print("Found training history in checkpoint — plotting epoch curves.")
-        history = {k: ckpt[k] for k in ckpt if isinstance(ckpt[k], (list, tuple)) or k in history_keys}
-        # ensure required keys exist
-        history = {
-            "train_losses": ckpt.get("train_losses"),
-            "val_losses": ckpt.get("val_losses"),
-            "train_accs": ckpt.get("train_accs"),
-            "val_accs": ckpt.get("val_accs"),
-            "train_roc_auc": ckpt.get("train_roc_auc"),
-            "val_roc_auc": ckpt.get("val_roc_auc"),
-            "train_pr_auc": ckpt.get("train_pr_auc"),
-            "val_pr_auc": ckpt.get("val_pr_auc"),
-        }
-        plot_epoch_curves(history, out_dir=out_dir)
-        print(f"Saved epoch curves to {out_dir}")
-        # still compute one-shot evaluation for ROC/PR if user wants
-    else:
-        print("No epoch history in checkpoint — will compute metrics on train & val loaders now.")
+    # # Case A: history present in checkpoint
+    # history_keys = ["train_losses", "val_losses", "train_accs", "val_accs"]
+    # if all(k in ckpt for k in history_keys):
+    #     print("Found training history in checkpoint — plotting epoch curves.")
+    #     history = {k: ckpt[k] for k in ckpt if isinstance(ckpt[k], (list, tuple)) or k in history_keys}
+    #     # ensure required keys exist
+    #     history = {
+    #         "train_losses": ckpt.get("train_losses"),
+    #         "val_losses": ckpt.get("val_losses"),
+    #         "train_accs": ckpt.get("train_accs"),
+    #         "val_accs": ckpt.get("val_accs"),
+    #         "train_roc_auc": ckpt.get("train_roc_auc"),
+    #         "val_roc_auc": ckpt.get("val_roc_auc"),
+    #         "train_pr_auc": ckpt.get("train_pr_auc"),
+    #         "val_pr_auc": ckpt.get("val_pr_auc"),
+    #     }
+    #     plot_epoch_curves(history, out_dir=out_dir)
+    #     print(f"Saved epoch curves to {out_dir}")
+    #     # still compute one-shot evaluation for ROC/PR if user wants
+    # else:
+    #     print("No epoch history in checkpoint — will compute metrics on train & val loaders now.")
 
-    # Compute metrics on full train & val sets (one-shot)
-    train_metrics = evaluate_loader(model, train_loader, criterion=criterion, device=device)
-    val_metrics = evaluate_loader(model, test_loader, criterion=criterion, device=device)
+    # # Compute metrics on full train & val sets (one-shot)
+    # train_metrics = evaluate_loader(model, train_loader, criterion=criterion, device=device)
+    # val_metrics = evaluate_loader(model, test_loader, criterion=criterion, device=device)
 
-    print("Train metrics:")
-    for k in ["accuracy", "loss", "precision", "recall", "f1", "roc_auc", "pr_auc"]:
-        print(f"  {k}: {train_metrics.get(k)}")
-    print("Val metrics:")
-    for k in ["accuracy", "loss", "precision", "recall", "f1", "roc_auc", "pr_auc"]:
-        print(f"  {k}: {val_metrics.get(k)}")
+    # print("Train metrics:")
+    # for k in "accuracy", "loss", "precision", "recall", "f1", "roc_auc", "pr_auc"]:
+    #     print(f"  {k}: {train_metrics.get(k)}")
+    # print("Val metrics:")
+    # for k in ["accuracy", "loss", "precision", "recall", "f1", "roc_auc", "pr_auc"]:
+    #     print(f"  {k}: {val_metrics.get(k)}")
 
-    # plot bar metrics
-    plot_bar_metrics(train_metrics, val_metrics, out_dir=out_dir)
-    # plot ROC / PR curves
-    plot_roc_pr(train_metrics, val_metrics, out_dir=out_dir)
+    # # plot bar metrics
+    # plot_bar_metrics(train_metrics, val_metrics, out_dir=out_dir)
+    # # plot ROC / PR curves
+    # plot_roc_pr(train_metrics, val_metrics, out_dir=out_dir)
 
-    print("Plots saved to:", os.path.abspath(out_dir))
-
-
+    # print("Plots saved to:", os.path.abspath(out_dir))
 
 
-    # save_dir = "/data2/users/koushani/chbmit/Root/src/checkpoints"                 # <-- change this to your desired folder
-    # os.makedirs(save_dir, exist_ok=True)
 
-    # best_test_acc = 0.0
-    # best_path = os.path.join(save_dir, "best_model.pth")
-    # last_path  = os.path.join(save_dir, "last_checkpoint.pth")
 
-    # for epoch in range(num_epochs):
-    #     model.train()
-    #     running_loss = 0.0
-    #     correct = 0
-    #     total = 0
+    save_dir = "/data2/users/koushani/chbmit/Root/src/checkpoints"                 # <-- change this to your desired folder
+    os.makedirs(save_dir, exist_ok=True)
 
-    #     for inputs, labels in train_loader:
-    #         inputs, labels = inputs.to(device), labels.to(device)
+    # 5. Train the model
+    train_and_validate(model, train_loader, test_loader, criterion, optimizer, device, num_epochs)
 
-    #         optimizer.zero_grad()
-    #         outputs = model(inputs)
-    #         loss = criterion(outputs, labels)
-    #         loss.backward()
-    #         optimizer.step()
+    # 6. Evaluate the model after training
+    val_loss, val_acc, val_roc_auc, val_pr_auc = evaluate_loader(model, test_loader, device, criterion)
+    print(f"\nFinal Validation Results:")
+    print(f"Loss: {val_loss:.4f}, Accuracy: {val_acc:.2f}%, ROC AUC: {val_roc_auc:.4f}, PR AUC: {val_pr_auc:.4f}")
 
-    #         running_loss += loss.item()
-    #         _, predicted = torch.max(outputs.data, 1)
-    #         total += labels.size(0)
-    #         correct += (predicted == labels).sum().item()
-
-    #     train_acc = 100 * correct / total
-    #     print(f"Epoch {epoch+1}, Loss: {running_loss:.4f}, Training Accuracy: {train_acc:.2f}%")
-
-    #     # Evaluate every 10 epochs
-    #     if (epoch + 1) % 10 == 0:
-    #         model.eval()
-    #         correct_test = 0
-    #         total_test = 0
-
-    #         with torch.no_grad():
-    #             for inputs, labels in test_loader:
-    #                 inputs, labels = inputs.to(device), labels.to(device)
-    #                 outputs = model(inputs)
-    #                 _, predicted = torch.max(outputs.data, 1)
-    #                 total_test += labels.size(0)
-    #                 correct_test += (predicted == labels).sum().item()
-
-    #         test_acc = 100 * correct_test / total_test
-    #         print(f">>> Test Accuracy after epoch {epoch+1}: {test_acc:.2f}%")
-
-    #         # Save best model (by test accuracy)
-    #         if test_acc > best_test_acc:
-    #             best_test_acc = test_acc
-    #             torch.save({
-    #                 "epoch": epoch + 1,
-    #                 "model_state_dict": model.state_dict(),
-    #                 "optimizer_state_dict": optimizer.state_dict(),
-    #                 "best_test_acc": best_test_acc,
-    #                 "train_loss": running_loss
-    #             }, best_path)
-    #             print(f"Saved new best model to: {best_path} (test_acc={best_test_acc:.2f}%)")
-
-    #     # optional: save a rolling/last checkpoint every epoch (keeps training resumable)
+        # optional: save a rolling/last checkpoint every epoch (keeps training resumable)
         
 
-    # # final save at end of training (timestamped)
-    # ts = time.strftime("%Y%m%d_%H%M%S")
-    # final_path = os.path.join(save_dir, f"model_final_{ts}.pth")
-    # torch.save({
-    #     "epoch": num_epochs,
-    #     "model_state_dict": model.state_dict(),
-    #     "optimizer_state_dict": optimizer.state_dict(),
-    #     "best_test_acc": best_test_acc
-    # }, final_path)
-    # print(f"Training finished. Final model saved to: {final_path}")
+  
             
 
 
 
-
-
-
-
-
-
-   
-    
-   # why are all sample points having the same label? Is shuffling not happening?
-   # # do we need to reshape 320X320 to 224X224 to run ResNet on it?
     
 
 
