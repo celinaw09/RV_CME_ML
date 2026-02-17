@@ -1,0 +1,71 @@
+sample_path,sample_id,true_label,pred_idx,target_idx,overlay_path,comparison_path,target_layer,prob_nonCME,prob_CME
+/data2/users/koushani/chbmit/data/allpatients_resized/non_CME/IshK_OU/IshK_OS.png,idx84_IshK_OS,0,0,0,/data2/users/koushani/chbmit/github/RV_CME_ML/Root/xai_plots/idx84_IshK_OS_true_nonCME_pred_nonCME_p0_0.978_p1_0.022_target_nonCME_overlay.png,/data2/users/koushani/chbmit/github/RV_CME_ML/Root/xai_plots/idx84_IshK_OS_true_nonCME_pred_nonCME_p0_0.978_p1_0.022_target_nonCME_comparison.pdf,"BasicBlock(
+  (conv1): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (relu): ReLU(inplace=True)
+  (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+)",0.9776662588119507,0.022333748638629913
+/data2/users/koushani/chbmit/data/allpatients_resized/non_CME/MadM_OD/MadM_OD.png,idx36_MadM_OD,0,0,0,/data2/users/koushani/chbmit/github/RV_CME_ML/Root/xai_plots/idx36_MadM_OD_true_nonCME_pred_nonCME_p0_0.890_p1_0.110_target_nonCME_overlay.png,/data2/users/koushani/chbmit/github/RV_CME_ML/Root/xai_plots/idx36_MadM_OD_true_nonCME_pred_nonCME_p0_0.890_p1_0.110_target_nonCME_comparison.pdf,"BasicBlock(
+  (conv1): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (relu): ReLU(inplace=True)
+  (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+)",0.8901907801628113,0.10980915278196335
+/data2/users/koushani/chbmit/data/allpatients_resized/non_CME/BraL_OU/BraL_OD.png,idx100_BraL_OD,0,0,0,/data2/users/koushani/chbmit/github/RV_CME_ML/Root/xai_plots/idx100_BraL_OD_true_nonCME_pred_nonCME_p0_0.998_p1_0.002_target_nonCME_overlay.png,/data2/users/koushani/chbmit/github/RV_CME_ML/Root/xai_plots/idx100_BraL_OD_true_nonCME_pred_nonCME_p0_0.998_p1_0.002_target_nonCME_comparison.pdf,"BasicBlock(
+  (conv1): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (relu): ReLU(inplace=True)
+  (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+)",0.9983763694763184,0.0016236146911978722
+/data2/users/koushani/chbmit/data/allpatients_resized/non_CME/CatC_OU/CatC_OS_close.png,idx70_CatC_OS_close,0,0,0,/data2/users/koushani/chbmit/github/RV_CME_ML/Root/xai_plots/idx70_CatC_OS_close_true_nonCME_pred_nonCME_p0_1.000_p1_0.000_target_nonCME_overlay.png,/data2/users/koushani/chbmit/github/RV_CME_ML/Root/xai_plots/idx70_CatC_OS_close_true_nonCME_pred_nonCME_p0_1.000_p1_0.000_target_nonCME_comparison.pdf,"BasicBlock(
+  (conv1): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (relu): ReLU(inplace=True)
+  (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+)",0.9998756647109985,0.0001243473234353587
+/data2/users/koushani/chbmit/data/allpatients_resized/non_CME/HanM_OU/HanM_OD.png,idx115_HanM_OD,0,0,0,/data2/users/koushani/chbmit/github/RV_CME_ML/Root/xai_plots/idx115_HanM_OD_true_nonCME_pred_nonCME_p0_0.997_p1_0.003_target_nonCME_overlay.png,/data2/users/koushani/chbmit/github/RV_CME_ML/Root/xai_plots/idx115_HanM_OD_true_nonCME_pred_nonCME_p0_0.997_p1_0.003_target_nonCME_comparison.pdf,"BasicBlock(
+  (conv1): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (relu): ReLU(inplace=True)
+  (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+)",0.9967982172966003,0.0032017803750932217
+/data2/users/koushani/chbmit/data/allpatients_resized/CME/ChrL_OU/ChrL_OD.png,idx171_ChrL_OD,1,0,0,/data2/users/koushani/chbmit/github/RV_CME_ML/Root/xai_plots/idx171_ChrL_OD_true_CME_pred_nonCME_p0_0.897_p1_0.103_target_nonCME_overlay.png,/data2/users/koushani/chbmit/github/RV_CME_ML/Root/xai_plots/idx171_ChrL_OD_true_CME_pred_nonCME_p0_0.897_p1_0.103_target_nonCME_comparison.pdf,"BasicBlock(
+  (conv1): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (relu): ReLU(inplace=True)
+  (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+)",0.8970928192138672,0.10290723294019699
+/data2/users/koushani/chbmit/data/allpatients_resized/CME/GinP_OS/GinP_OS.png,idx159_GinP_OS,1,0,0,/data2/users/koushani/chbmit/github/RV_CME_ML/Root/xai_plots/idx159_GinP_OS_true_CME_pred_nonCME_p0_0.998_p1_0.002_target_nonCME_overlay.png,/data2/users/koushani/chbmit/github/RV_CME_ML/Root/xai_plots/idx159_GinP_OS_true_CME_pred_nonCME_p0_0.998_p1_0.002_target_nonCME_comparison.pdf,"BasicBlock(
+  (conv1): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (relu): ReLU(inplace=True)
+  (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+)",0.9984787106513977,0.0015212593134492636
+/data2/users/koushani/chbmit/data/allpatients_resized/CME/DeeD_OU/DeeD_OS_close.png,idx135_DeeD_OS_close,1,1,1,/data2/users/koushani/chbmit/github/RV_CME_ML/Root/xai_plots/idx135_DeeD_OS_close_true_CME_pred_CME_p0_0.001_p1_0.999_target_CME_overlay.png,/data2/users/koushani/chbmit/github/RV_CME_ML/Root/xai_plots/idx135_DeeD_OS_close_true_CME_pred_CME_p0_0.001_p1_0.999_target_CME_comparison.pdf,"BasicBlock(
+  (conv1): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (relu): ReLU(inplace=True)
+  (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+)",0.0005225327331572771,0.9994774460792542
+/data2/users/koushani/chbmit/data/allpatients_resized/CME/JMK_OU/JMK_OS.png,idx153_JMK_OS,1,1,1,/data2/users/koushani/chbmit/github/RV_CME_ML/Root/xai_plots/idx153_JMK_OS_true_CME_pred_CME_p0_0.004_p1_0.996_target_CME_overlay.png,/data2/users/koushani/chbmit/github/RV_CME_ML/Root/xai_plots/idx153_JMK_OS_true_CME_pred_CME_p0_0.004_p1_0.996_target_CME_comparison.pdf,"BasicBlock(
+  (conv1): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (relu): ReLU(inplace=True)
+  (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+)",0.004103472456336021,0.995896577835083
+/data2/users/koushani/chbmit/data/allpatients_resized/CME/JenB_OU/JenB_FA_OD_close.png,idx141_JenB_FA_OD_close,1,1,1,/data2/users/koushani/chbmit/github/RV_CME_ML/Root/xai_plots/idx141_JenB_FA_OD_close_true_CME_pred_CME_p0_0.002_p1_0.998_target_CME_overlay.png,/data2/users/koushani/chbmit/github/RV_CME_ML/Root/xai_plots/idx141_JenB_FA_OD_close_true_CME_pred_CME_p0_0.002_p1_0.998_target_CME_comparison.pdf,"BasicBlock(
+  (conv1): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (relu): ReLU(inplace=True)
+  (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+)",0.001606904435902834,0.9983931183815002
