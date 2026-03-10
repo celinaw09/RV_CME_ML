@@ -16,7 +16,12 @@ from dataset.dataset import EyeFFEDataset
 from torch.utils.data import DataLoader, Dataset
 import torchvision.models as models
 from sklearn.model_selection import train_test_split
-from utils.xai_utils import run_gradcam_on_balanced_samples
+from utils.xai_utils import (
+    run_gradcam_on_category,
+    make_category_grid_figure,
+    analyze_cam_similarity,
+    analyze_mean_cam_centers,
+)
 import torch
 from torchsummary import summary
 from PIL import Image
@@ -25,6 +30,9 @@ import numpy as np
 import time
 import os
 import re
+import glob
+
+
 
 
 
@@ -188,9 +196,9 @@ def main():
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
 
-    out_dir = "/data2/users/koushani/chbmit/Root/plots"
+    out_dir = "/data2/users/koushani/chbmit/repo_reset/RV_CME_ML/Root/plots"
     os.makedirs(out_dir, exist_ok=True)
-    save_dir = "/data2/users/koushani/chbmit/github/RV_CME_ML/Root/src/checkpoint_dir"
+    save_dir = "/data2/users/koushani/chbmit/repo_reset/RV_CME_ML/Root/src/checkpoint_dir"
     os.makedirs(save_dir, exist_ok=True)
 
     best_ckpt_path = os.path.join(save_dir, "best_model.pth")  # <-- file inside dir
@@ -235,27 +243,59 @@ def main():
         print("No best checkpoint found — was validation ever run?")
 
     
-    XAI_ROOT = "/data2/users/koushani/chbmit/github/RV_CME_ML/Root/"
+    XAI_ROOT = "/data2/users/koushani/chbmit/repo_reset/RV_CME_ML/Root"
 
     # make sure model is loaded with best weights and eval mode
     model.eval()
 
-    xai_report = run_gradcam_on_balanced_samples(
-        df=df_test,
-        model=model,
-        device=device,
-        transform=transform,
-        xai_root_dir=XAI_ROOT,
-        n_per_class=5,
-        seed=42,
-    )
-    print(xai_report[["sample_id", "true_label", "pred_idx", "prob_CME", "overlay_path", "comparison_path"]])
-# run_gradcam_single(
-#     model, device, sample_path, transform,
-#     out_path="/.../gradcam_overlay_force_CME.png",
-#     class_idx=1  # force CME
-# )
+    # for category in ["TP", "TN", "FP", "FN"]:
+    #     report = run_gradcam_on_category(
+    #         df=df_test,
+    #         model=model,
+    #         device=device,
+    #         transform=transform,
+    #         xai_root_dir=XAI_ROOT,
+    #         category=category,
+    #         n_samples=5,
+    #         seed=42,
+    #         threshold=0.5
+    #     )
 
+    #     if isinstance(report, pd.DataFrame) and len(report) > 0:
+    #         print(report[[
+    #             "sample_id",
+    #             "category",
+    #             "true_label",
+    #             "pred_idx_thresh",
+    #             "prob_CME",
+    #             "pair_png_path",
+    #             "triple_pdf_path"
+    #         ]])
+
+    #         report_csv = os.path.join(XAI_ROOT, "xai_plots", category, f"xai_report_{category}.csv")
+    #         out_pdf = os.path.join(XAI_ROOT, "xai_plots", category, f"{category}_grid.pdf")
+
+    #         make_category_grid_figure(
+    #             report_csv=report_csv,
+    #             out_pdf=out_pdf,
+    #             n_rows=5,
+    #             seed=42,
+    #             category_name=category
+    #         )
+
+    scores_df, summary_df = analyze_cam_similarity(
+    xai_root_dir=XAI_ROOT,
+    categories=("TP", "TN", "FP", "FN"),
+    out_filename_prefix="cam_similarity",
+    make_boxplot=True,
+)
+
+    print("\n=== CAM SIMILARITY SUMMARY ===")
+    print(summary_df)
+    print("================================\n")
+
+
+    
 
 
     
