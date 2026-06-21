@@ -54,8 +54,35 @@ No test data are used during threshold selection.
 
 ## Repository Structure
 
-text . ├── main.py ├── utils/ │   ├── train.py │   └── misc_utils.py │ ├── checkpoint_dir/ │   └── best_model.pth │ └── experiment_logs/     └── run_20260621_083308/         ├── console_output.txt         ├── cv_summary.json         ├── fold_summary.csv         ├── cross_validation_results.csv         ├── cv_confusion_matrix.png         ├── cv_roc_curve.pdf         ├── cv_pr_curve.pdf         │         ├── fold_1/         ├── fold_2/         ├── fold_3/         ├── fold_4/         └── fold_5/ 
-
+```text
+.
+├── src/
+│   ├── main.py
+│   ├── utils/
+│   │   ├── train.py
+│   │   └── misc_utils.py
+│   │
+│   ├── checkpoint_dir/
+│   │   └── best_model.pth
+│   │
+│   └── experiment_logs/
+│       └── run_20260621_083308/
+│           ├── console_output.txt
+│           ├── cv_summary.json
+│           ├── fold_summary.csv
+│           ├── cross_validation_results.csv
+│           ├── cv_confusion_matrix.png
+│           ├── cv_roc_curve.pdf
+│           ├── cv_pr_curve.pdf
+│           │
+│           ├── fold_1/
+│           ├── fold_2/
+│           ├── fold_3/
+│           ├── fold_4/
+│           └── fold_5/
+│
+└── README.md
+```
 ---
 
 ## Experimental Run
@@ -80,7 +107,7 @@ Date: 2026-06-21
 ## Confusion Matrix
 
 <p align="center">
-  <img src="experiment_logs/run_20260621_083308/cv_confusion_matrix.png" width="700">
+  <img src="src/experiment_logs/run_20260621_083308/cv_confusion_matrix.png" width="700">
 </p>
 
 Aggregate confusion matrix computed from predictions across all held-out test folds.
