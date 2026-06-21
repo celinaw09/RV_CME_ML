@@ -1,6 +1,6 @@
-# CME Classification from OCT Imaging
+# CME Classification from FAA Imaging
 
-Deep learning framework for patient-level classification of Cystoid Macular Edema (CME) versus Non-CME from retinal OCT images.
+Deep learning framework for patient-level classification of Cystoid Macular Edema (CME) versus Non-CME from retinal FAA images.
 
 ---
 
