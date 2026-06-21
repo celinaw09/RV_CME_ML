@@ -1,32 +1,43 @@
+# =========================
 # Python
+# =========================
 __pycache__/
 *.py[cod]
 .ipynb_checkpoints/
 
-# Environments
+# =========================
+# Virtual environments
+# =========================
 venv/
 .venv/
 env/
 
-# Models
-checkpoint_dir/
-*.pth
-*.pt
-*.ckpt
-
-# Generated outputs
-experiment_logs/
-plots/
-xai_plots/
-
-# Large arrays
-*.npy
-*.npz
-
+# =========================
 # IDE
+# =========================
 .vscode/
 .idea/
 
+# =========================
 # OS
+# =========================
 .DS_Store
 Thumbs.db
+
+# =========================
+# Temporary large arrays
+# =========================
+*.npy
+*.npz
+
+# =========================
+# XAI outputs (temporary)
+# =========================
+xai_plots/
+
+# =========================
+# Checkpoints
+# Keep only the best model
+# =========================
+checkpoint_dir/*
+!checkpoint_dir/best_model.pth

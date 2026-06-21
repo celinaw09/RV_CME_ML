@@ -1,0 +1,2916 @@
+============================================================
+Experiment folder: experiment_logs/run_20260621_083308
+Started at: 20260621_083308
+PyTorch version: 2.7.0
+============================================================
+Patient folders: 132
+
+Dataset Summary
+Images   : 222
+Patients : 132
+
+Label Distribution
+non_CME    131
+CME         91
+Name: label, dtype: int64
+
+==================================================
+FULL DATASET SUMMARY
+==================================================
+Total images: 222
+Total patients: 132
+
+Raw labels:
+non_CME    131
+CME         91
+Name: label, dtype: int64
+  patient_id eye                                         image_path label
+0     ACB_OU  OD  /data2/users/koushani/chbmit/data/allpatients_...   CME
+1     ACB_OU  OS  /data2/users/koushani/chbmit/data/allpatients_...   CME
+2    AliM_OU  OD  /data2/users/koushani/chbmit/data/allpatients_...   CME
+3    AliM_OU  OS  /data2/users/koushani/chbmit/data/allpatients_...   CME
+4    AnnB_OU  OD  /data2/users/koushani/chbmit/data/allpatients_...   CME
+Only OD: 22
+Only OS: 20
+
+===================================
+PATIENT IMAGE COUNT ANALYSIS
+===================================
+1    42
+2    90
+dtype: int64
+
+Patients not having exactly 2 images:
+ClaG_OS 1
+ElaC_OS 1
+EliC_OU 1
+GeoM_OS 1
+GinP_OD 1
+GinP_OS 1
+HAG_OD 1
+HAG_OS 1
+JA_OD 1
+JaB_OD 1
+JanC_OD 1
+JanC_OS 1
+JenD_OD 1
+JenD_OS 1
+JosC_OS 1
+KH_OD 1
+KON_OS 1
+KenE_OD 1
+LinO_OS 1
+MadM_OD 1
+MadM_OS 1
+MatF_OD 1
+MatP_OD 1
+MelH_OD 1
+NatC_OD 1
+NicC_OS 1
+PatL_OS 1
+PauO_OS 1
+PetO_OD 1
+PetO_OS 1
+RavN_OD 1
+RobD_OS 1
+RobDe_OS 1
+RogD_OD 1
+RogD_OS 1
+SB_OD 1
+SeaD_OD 1
+SonE_OD 1
+TamM_OS 1
+UmbM_OD 1
+YRN_OU 1
+YvoO_OS 1
+Total number of data points (images): 222
+
+Encoded labels:
+0    131
+1     91
+Name: label, dtype: int64
+
+Unique label values: [0, 1]
+
+====================================
+5-FOLD CROSS VALIDATION
+====================================
+Patients: 132
+0    73
+1    59
+Name: patient_label, dtype: int64
+
+
+============================================================
+FOLD 1
+============================================================
+Train patients: 89
+Val patients: 16
+Test patients: 27
+
+Train images: 147
+Val images: 28
+Test images: 47
+
+Train labels:
+0    87
+1    60
+Name: label, dtype: int64
+Val labels:
+0    16
+1    12
+Name: label, dtype: int64
+Test labels:
+0    28
+1    19
+Name: label, dtype: int64
+
+
+============================================================
+FOLD 2
+============================================================
+Train patients: 89
+Val patients: 16
+Test patients: 27
+
+Train images: 151
+Val images: 27
+Test images: 44
+
+Train labels:
+0    90
+1    61
+Name: label, dtype: int64
+Val labels:
+0    15
+1    12
+Name: label, dtype: int64
+Test labels:
+0    26
+1    18
+Name: label, dtype: int64
+
+
+============================================================
+FOLD 3
+============================================================
+Train patients: 90
+Val patients: 16
+Test patients: 26
+
+Train images: 153
+Val images: 28
+Test images: 41
+
+Train labels:
+0    89
+1    64
+Name: label, dtype: int64
+Val labels:
+0    17
+1    11
+Name: label, dtype: int64
+Test labels:
+0    25
+1    16
+Name: label, dtype: int64
+
+
+============================================================
+FOLD 4
+============================================================
+Train patients: 90
+Val patients: 16
+Test patients: 26
+
+Train images: 147
+Val images: 30
+Test images: 45
+
+Train labels:
+0    88
+1    59
+Name: label, dtype: int64
+Val labels:
+0    18
+1    12
+Name: label, dtype: int64
+Test labels:
+0    25
+1    20
+Name: label, dtype: int64
+
+
+============================================================
+FOLD 5
+============================================================
+Train patients: 90
+Val patients: 16
+Test patients: 26
+
+Train images: 149
+Val images: 28
+Test images: 45
+
+Train labels:
+0    88
+1    61
+Name: label, dtype: int64
+Val labels:
+0    16
+1    12
+Name: label, dtype: int64
+Test labels:
+0    27
+1    18
+Name: label, dtype: int64
+
+Created 5 folds
+
+Saved fold_summary.csv
+
+============================================================
+TRAINING FOLD 1
+============================================================
+
+=== TRAINABLE PARAMETERS ===
+conv1.weight                                       False
+bn1.weight                                         False
+bn1.bias                                           False
+layer1.0.conv1.weight                              False
+layer1.0.bn1.weight                                False
+layer1.0.bn1.bias                                  False
+layer1.0.conv2.weight                              False
+layer1.0.bn2.weight                                False
+layer1.0.bn2.bias                                  False
+layer1.1.conv1.weight                              False
+layer1.1.bn1.weight                                False
+layer1.1.bn1.bias                                  False
+layer1.1.conv2.weight                              False
+layer1.1.bn2.weight                                False
+layer1.1.bn2.bias                                  False
+layer2.0.conv1.weight                              False
+layer2.0.bn1.weight                                False
+layer2.0.bn1.bias                                  False
+layer2.0.conv2.weight                              False
+layer2.0.bn2.weight                                False
+layer2.0.bn2.bias                                  False
+layer2.0.downsample.0.weight                       False
+layer2.0.downsample.1.weight                       False
+layer2.0.downsample.1.bias                         False
+layer2.1.conv1.weight                              False
+layer2.1.bn1.weight                                False
+layer2.1.bn1.bias                                  False
+layer2.1.conv2.weight                              False
+layer2.1.bn2.weight                                False
+layer2.1.bn2.bias                                  False
+layer3.0.conv1.weight                              False
+layer3.0.bn1.weight                                False
+layer3.0.bn1.bias                                  False
+layer3.0.conv2.weight                              False
+layer3.0.bn2.weight                                False
+layer3.0.bn2.bias                                  False
+layer3.0.downsample.0.weight                       False
+layer3.0.downsample.1.weight                       False
+layer3.0.downsample.1.bias                         False
+layer3.1.conv1.weight                              False
+layer3.1.bn1.weight                                False
+layer3.1.bn1.bias                                  False
+layer3.1.conv2.weight                              False
+layer3.1.bn2.weight                                False
+layer3.1.bn2.bias                                  False
+layer4.0.conv1.weight                              True
+layer4.0.bn1.weight                                True
+layer4.0.bn1.bias                                  True
+layer4.0.conv2.weight                              True
+layer4.0.bn2.weight                                True
+layer4.0.bn2.bias                                  True
+layer4.0.downsample.0.weight                       True
+layer4.0.downsample.1.weight                       True
+layer4.0.downsample.1.bias                         True
+layer4.1.conv1.weight                              True
+layer4.1.bn1.weight                                True
+layer4.1.bn1.bias                                  True
+layer4.1.conv2.weight                              True
+layer4.1.bn2.weight                                True
+layer4.1.bn2.bias                                  True
+fc.1.weight                                        True
+fc.1.bias                                          True
+Trainable params: 8,394,754
+Total params: 11,171,266
+Percent trainable: 75.15%
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+            Conv2d-1          [1, 64, 160, 160]           3,136
+       BatchNorm2d-2          [1, 64, 160, 160]             128
+              ReLU-3          [1, 64, 160, 160]               0
+         MaxPool2d-4            [1, 64, 80, 80]               0
+            Conv2d-5            [1, 64, 80, 80]          36,864
+       BatchNorm2d-6            [1, 64, 80, 80]             128
+              ReLU-7            [1, 64, 80, 80]               0
+            Conv2d-8            [1, 64, 80, 80]          36,864
+       BatchNorm2d-9            [1, 64, 80, 80]             128
+             ReLU-10            [1, 64, 80, 80]               0
+       BasicBlock-11            [1, 64, 80, 80]               0
+           Conv2d-12            [1, 64, 80, 80]          36,864
+      BatchNorm2d-13            [1, 64, 80, 80]             128
+             ReLU-14            [1, 64, 80, 80]               0
+           Conv2d-15            [1, 64, 80, 80]          36,864
+      BatchNorm2d-16            [1, 64, 80, 80]             128
+             ReLU-17            [1, 64, 80, 80]               0
+       BasicBlock-18            [1, 64, 80, 80]               0
+           Conv2d-19           [1, 128, 40, 40]          73,728
+      BatchNorm2d-20           [1, 128, 40, 40]             256
+             ReLU-21           [1, 128, 40, 40]               0
+           Conv2d-22           [1, 128, 40, 40]         147,456
+      BatchNorm2d-23           [1, 128, 40, 40]             256
+           Conv2d-24           [1, 128, 40, 40]           8,192
+      BatchNorm2d-25           [1, 128, 40, 40]             256
+             ReLU-26           [1, 128, 40, 40]               0
+       BasicBlock-27           [1, 128, 40, 40]               0
+           Conv2d-28           [1, 128, 40, 40]         147,456
+      BatchNorm2d-29           [1, 128, 40, 40]             256
+             ReLU-30           [1, 128, 40, 40]               0
+           Conv2d-31           [1, 128, 40, 40]         147,456
+      BatchNorm2d-32           [1, 128, 40, 40]             256
+             ReLU-33           [1, 128, 40, 40]               0
+       BasicBlock-34           [1, 128, 40, 40]               0
+           Conv2d-35           [1, 256, 20, 20]         294,912
+      BatchNorm2d-36           [1, 256, 20, 20]             512
+             ReLU-37           [1, 256, 20, 20]               0
+           Conv2d-38           [1, 256, 20, 20]         589,824
+      BatchNorm2d-39           [1, 256, 20, 20]             512
+           Conv2d-40           [1, 256, 20, 20]          32,768
+      BatchNorm2d-41           [1, 256, 20, 20]             512
+             ReLU-42           [1, 256, 20, 20]               0
+       BasicBlock-43           [1, 256, 20, 20]               0
+           Conv2d-44           [1, 256, 20, 20]         589,824
+      BatchNorm2d-45           [1, 256, 20, 20]             512
+             ReLU-46           [1, 256, 20, 20]               0
+           Conv2d-47           [1, 256, 20, 20]         589,824
+      BatchNorm2d-48           [1, 256, 20, 20]             512
+             ReLU-49           [1, 256, 20, 20]               0
+       BasicBlock-50           [1, 256, 20, 20]               0
+           Conv2d-51           [1, 512, 10, 10]       1,179,648
+      BatchNorm2d-52           [1, 512, 10, 10]           1,024
+             ReLU-53           [1, 512, 10, 10]               0
+           Conv2d-54           [1, 512, 10, 10]       2,359,296
+      BatchNorm2d-55           [1, 512, 10, 10]           1,024
+           Conv2d-56           [1, 512, 10, 10]         131,072
+      BatchNorm2d-57           [1, 512, 10, 10]           1,024
+             ReLU-58           [1, 512, 10, 10]               0
+       BasicBlock-59           [1, 512, 10, 10]               0
+           Conv2d-60           [1, 512, 10, 10]       2,359,296
+      BatchNorm2d-61           [1, 512, 10, 10]           1,024
+             ReLU-62           [1, 512, 10, 10]               0
+           Conv2d-63           [1, 512, 10, 10]       2,359,296
+      BatchNorm2d-64           [1, 512, 10, 10]           1,024
+             ReLU-65           [1, 512, 10, 10]               0
+       BasicBlock-66           [1, 512, 10, 10]               0
+AdaptiveAvgPool2d-67             [1, 512, 1, 1]               0
+          Dropout-68                   [1, 512]               0
+           Linear-69                     [1, 2]           1,026
+================================================================
+Total params: 11,171,266
+Trainable params: 8,394,754
+Non-trainable params: 2,776,512
+----------------------------------------------------------------
+Input size (MB): 0.39
+Forward/backward pass size (MB): 128.13
+Params size (MB): 42.61
+Estimated Total Size (MB): 171.14
+----------------------------------------------------------------
+Class weights: tensor([0.8448, 1.2250], device='cuda:0')
+Trainable params: 8,394,754 / 11,171,266
+
+Fold 1: 147 train, 28 val, 47 test images
+Train Epoch: 1 [0/147 (0%)]	Loss: 0.750277
+Train Epoch 1 Average loss: 0.7000, Accuracy: 85/147 (57.82%)
+
+=== Validation at epoch 1 (every 1 epochs) ===
+Validation Loss: 0.6817
+Accuracy:          0.5714
+AUROC:             0.9010
+AUPRC:             0.9089
+F1-score:          0.0000
+Sensitivity:       0.0000
+Specificity:       1.0000
+TP=0, FP=0, TN=16, FN=12
+
+Validation results:
+  loss        : 0.6817
+  accuracy    : 0.5714
+  auroc       : 0.9010
+  auprc       : 0.9089
+  sensitivity : 0.0000
+  specificity : 1.0000
+  f1          : 0.0000
+=====================================================================
+
+[Best Model Update] auroc improved from -inf to 0.9010. Saving checkpoint to experiment_logs/run_20260621_083308/fold_1/best_model.pth
+Train Epoch: 2 [0/147 (0%)]	Loss: 0.475012
+Train Epoch 2 Average loss: 0.5099, Accuracy: 109/147 (74.15%)
+
+=== Validation at epoch 2 (every 1 epochs) ===
+Validation Loss: 0.5654
+Accuracy:          0.7143
+AUROC:             0.9062
+AUPRC:             0.9289
+F1-score:          0.5000
+Sensitivity:       0.3333
+Specificity:       1.0000
+TP=4, FP=0, TN=16, FN=8
+
+Validation results:
+  loss        : 0.5654
+  accuracy    : 0.7143
+  auroc       : 0.9062
+  auprc       : 0.9289
+  sensitivity : 0.3333
+  specificity : 1.0000
+  f1          : 0.5000
+=====================================================================
+
+[Best Model Update] auroc improved from 0.9010 to 0.9062. Saving checkpoint to experiment_logs/run_20260621_083308/fold_1/best_model.pth
+Train Epoch: 3 [0/147 (0%)]	Loss: 0.315047
+Train Epoch 3 Average loss: 0.3642, Accuracy: 131/147 (89.12%)
+
+=== Validation at epoch 3 (every 1 epochs) ===
+Validation Loss: 0.5111
+Accuracy:          0.7857
+AUROC:             0.9010
+AUPRC:             0.9195
+F1-score:          0.6667
+Sensitivity:       0.5000
+Specificity:       1.0000
+TP=6, FP=0, TN=16, FN=6
+
+Validation results:
+  loss        : 0.5111
+  accuracy    : 0.7857
+  auroc       : 0.9010
+  auprc       : 0.9195
+  sensitivity : 0.5000
+  specificity : 1.0000
+  f1          : 0.6667
+=====================================================================
+
+[ES] No improvement in auroc: 1/10 (best=0.9062, current=0.9010)
+Train Epoch: 4 [0/147 (0%)]	Loss: 0.359515
+Train Epoch 4 Average loss: 0.3558, Accuracy: 123/147 (83.67%)
+
+=== Validation at epoch 4 (every 1 epochs) ===
+Validation Loss: 0.4931
+Accuracy:          0.8214
+AUROC:             0.8906
+AUPRC:             0.8997
+F1-score:          0.7368
+Sensitivity:       0.5833
+Specificity:       1.0000
+TP=7, FP=0, TN=16, FN=5
+
+Validation results:
+  loss        : 0.4931
+  accuracy    : 0.8214
+  auroc       : 0.8906
+  auprc       : 0.8997
+  sensitivity : 0.5833
+  specificity : 1.0000
+  f1          : 0.7368
+=====================================================================
+
+[ES] No improvement in auroc: 2/10 (best=0.9062, current=0.8906)
+Train Epoch: 5 [0/147 (0%)]	Loss: 0.339255
+Train Epoch 5 Average loss: 0.2518, Accuracy: 135/147 (91.84%)
+
+=== Validation at epoch 5 (every 1 epochs) ===
+Validation Loss: 0.5061
+Accuracy:          0.8214
+AUROC:             0.8802
+AUPRC:             0.8920
+F1-score:          0.7368
+Sensitivity:       0.5833
+Specificity:       1.0000
+TP=7, FP=0, TN=16, FN=5
+
+Validation results:
+  loss        : 0.5061
+  accuracy    : 0.8214
+  auroc       : 0.8802
+  auprc       : 0.8920
+  sensitivity : 0.5833
+  specificity : 1.0000
+  f1          : 0.7368
+=====================================================================
+
+[ES] No improvement in auroc: 3/10 (best=0.9062, current=0.8802)
+Train Epoch: 6 [0/147 (0%)]	Loss: 0.125899
+Train Epoch 6 Average loss: 0.2359, Accuracy: 135/147 (91.84%)
+
+=== Validation at epoch 6 (every 1 epochs) ===
+Validation Loss: 0.5244
+Accuracy:          0.8214
+AUROC:             0.8854
+AUPRC:             0.8924
+F1-score:          0.7368
+Sensitivity:       0.5833
+Specificity:       1.0000
+TP=7, FP=0, TN=16, FN=5
+
+Validation results:
+  loss        : 0.5244
+  accuracy    : 0.8214
+  auroc       : 0.8854
+  auprc       : 0.8924
+  sensitivity : 0.5833
+  specificity : 1.0000
+  f1          : 0.7368
+=====================================================================
+
+[ES] No improvement in auroc: 4/10 (best=0.9062, current=0.8854)
+Train Epoch: 7 [0/147 (0%)]	Loss: 0.375756
+Train Epoch 7 Average loss: 0.2091, Accuracy: 137/147 (93.20%)
+
+=== Validation at epoch 7 (every 1 epochs) ===
+Validation Loss: 0.5633
+Accuracy:          0.7857
+AUROC:             0.8854
+AUPRC:             0.8980
+F1-score:          0.6667
+Sensitivity:       0.5000
+Specificity:       1.0000
+TP=6, FP=0, TN=16, FN=6
+
+Validation results:
+  loss        : 0.5633
+  accuracy    : 0.7857
+  auroc       : 0.8854
+  auprc       : 0.8980
+  sensitivity : 0.5000
+  specificity : 1.0000
+  f1          : 0.6667
+=====================================================================
+
+[ES] No improvement in auroc: 5/10 (best=0.9062, current=0.8854)
+Train Epoch: 8 [0/147 (0%)]	Loss: 0.128775
+Train Epoch 8 Average loss: 0.2010, Accuracy: 135/147 (91.84%)
+
+=== Validation at epoch 8 (every 1 epochs) ===
+Validation Loss: 0.4971
+Accuracy:          0.8214
+AUROC:             0.8906
+AUPRC:             0.9107
+F1-score:          0.7368
+Sensitivity:       0.5833
+Specificity:       1.0000
+TP=7, FP=0, TN=16, FN=5
+
+Validation results:
+  loss        : 0.4971
+  accuracy    : 0.8214
+  auroc       : 0.8906
+  auprc       : 0.9107
+  sensitivity : 0.5833
+  specificity : 1.0000
+  f1          : 0.7368
+=====================================================================
+
+[ES] No improvement in auroc: 6/10 (best=0.9062, current=0.8906)
+Train Epoch: 9 [0/147 (0%)]	Loss: 0.515560
+Train Epoch 9 Average loss: 0.1653, Accuracy: 140/147 (95.24%)
+
+=== Validation at epoch 9 (every 1 epochs) ===
+Validation Loss: 0.5435
+Accuracy:          0.8214
+AUROC:             0.8438
+AUPRC:             0.8721
+F1-score:          0.7368
+Sensitivity:       0.5833
+Specificity:       1.0000
+TP=7, FP=0, TN=16, FN=5
+
+Validation results:
+  loss        : 0.5435
+  accuracy    : 0.8214
+  auroc       : 0.8438
+  auprc       : 0.8721
+  sensitivity : 0.5833
+  specificity : 1.0000
+  f1          : 0.7368
+=====================================================================
+
+[ES] No improvement in auroc: 7/10 (best=0.9062, current=0.8438)
+Train Epoch: 10 [0/147 (0%)]	Loss: 0.239077
+Train Epoch 10 Average loss: 0.1368, Accuracy: 143/147 (97.28%)
+
+=== Validation at epoch 10 (every 1 epochs) ===
+Validation Loss: 0.5050
+Accuracy:          0.8571
+AUROC:             0.8490
+AUPRC:             0.8755
+F1-score:          0.8000
+Sensitivity:       0.6667
+Specificity:       1.0000
+TP=8, FP=0, TN=16, FN=4
+
+Validation results:
+  loss        : 0.5050
+  accuracy    : 0.8571
+  auroc       : 0.8490
+  auprc       : 0.8755
+  sensitivity : 0.6667
+  specificity : 1.0000
+  f1          : 0.8000
+=====================================================================
+
+[ES] No improvement in auroc: 8/10 (best=0.9062, current=0.8490)
+Train Epoch: 11 [0/147 (0%)]	Loss: 0.065266
+Train Epoch 11 Average loss: 0.1261, Accuracy: 142/147 (96.60%)
+
+=== Validation at epoch 11 (every 1 epochs) ===
+Validation Loss: 0.4916
+Accuracy:          0.8571
+AUROC:             0.8594
+AUPRC:             0.8795
+F1-score:          0.8000
+Sensitivity:       0.6667
+Specificity:       1.0000
+TP=8, FP=0, TN=16, FN=4
+
+Validation results:
+  loss        : 0.4916
+  accuracy    : 0.8571
+  auroc       : 0.8594
+  auprc       : 0.8795
+  sensitivity : 0.6667
+  specificity : 1.0000
+  f1          : 0.8000
+=====================================================================
+
+[ES] No improvement in auroc: 9/10 (best=0.9062, current=0.8594)
+Train Epoch: 12 [0/147 (0%)]	Loss: 0.040734
+Train Epoch 12 Average loss: 0.1027, Accuracy: 143/147 (97.28%)
+
+=== Validation at epoch 12 (every 1 epochs) ===
+Validation Loss: 0.4692
+Accuracy:          0.8214
+AUROC:             0.8802
+AUPRC:             0.8886
+F1-score:          0.7619
+Sensitivity:       0.6667
+Specificity:       0.9375
+TP=8, FP=1, TN=15, FN=4
+
+Validation results:
+  loss        : 0.4692
+  accuracy    : 0.8214
+  auroc       : 0.8802
+  auprc       : 0.8886
+  sensitivity : 0.6667
+  specificity : 0.9375
+  f1          : 0.7619
+=====================================================================
+
+[ES] No improvement in auroc: 10/10 (best=0.9062, current=0.8802)
+
+[Early stopping triggered at epoch 12] Validation auroc has not improved for 10 periods.
+
+Early stopping triggered — breaking training loop.
+
+Loading best model from experiment_logs/run_20260621_083308/fold_1/best_model.pth for final evaluation...
+Using validation threshold 0.5000
+Using validation threshold 0.5000
+Validation Loss: 0.7286
+Accuracy:          0.6596
+AUROC:             0.6485
+AUPRC:             0.6353
+F1-score:          0.3846
+Sensitivity:       0.2632
+Specificity:       0.9286
+TP=5, FP=2, TN=26, FN=14
+
+Fold 1 Results:
+Accuracy    : 0.6596
+AUROC       : 0.6485
+AUPRC       : 0.6353
+
+=== FINAL METRICS (Best AUROC Model) ===
+  loss        : 0.7286
+  accuracy    : 0.6596
+  auroc       : 0.6485
+  auprc       : 0.6353
+  sensitivity : 0.2632
+  specificity : 0.9286
+  f1          : 0.3846
+=====================================================
+
+
+============================================================
+TRAINING FOLD 2
+============================================================
+
+=== TRAINABLE PARAMETERS ===
+conv1.weight                                       False
+bn1.weight                                         False
+bn1.bias                                           False
+layer1.0.conv1.weight                              False
+layer1.0.bn1.weight                                False
+layer1.0.bn1.bias                                  False
+layer1.0.conv2.weight                              False
+layer1.0.bn2.weight                                False
+layer1.0.bn2.bias                                  False
+layer1.1.conv1.weight                              False
+layer1.1.bn1.weight                                False
+layer1.1.bn1.bias                                  False
+layer1.1.conv2.weight                              False
+layer1.1.bn2.weight                                False
+layer1.1.bn2.bias                                  False
+layer2.0.conv1.weight                              False
+layer2.0.bn1.weight                                False
+layer2.0.bn1.bias                                  False
+layer2.0.conv2.weight                              False
+layer2.0.bn2.weight                                False
+layer2.0.bn2.bias                                  False
+layer2.0.downsample.0.weight                       False
+layer2.0.downsample.1.weight                       False
+layer2.0.downsample.1.bias                         False
+layer2.1.conv1.weight                              False
+layer2.1.bn1.weight                                False
+layer2.1.bn1.bias                                  False
+layer2.1.conv2.weight                              False
+layer2.1.bn2.weight                                False
+layer2.1.bn2.bias                                  False
+layer3.0.conv1.weight                              False
+layer3.0.bn1.weight                                False
+layer3.0.bn1.bias                                  False
+layer3.0.conv2.weight                              False
+layer3.0.bn2.weight                                False
+layer3.0.bn2.bias                                  False
+layer3.0.downsample.0.weight                       False
+layer3.0.downsample.1.weight                       False
+layer3.0.downsample.1.bias                         False
+layer3.1.conv1.weight                              False
+layer3.1.bn1.weight                                False
+layer3.1.bn1.bias                                  False
+layer3.1.conv2.weight                              False
+layer3.1.bn2.weight                                False
+layer3.1.bn2.bias                                  False
+layer4.0.conv1.weight                              True
+layer4.0.bn1.weight                                True
+layer4.0.bn1.bias                                  True
+layer4.0.conv2.weight                              True
+layer4.0.bn2.weight                                True
+layer4.0.bn2.bias                                  True
+layer4.0.downsample.0.weight                       True
+layer4.0.downsample.1.weight                       True
+layer4.0.downsample.1.bias                         True
+layer4.1.conv1.weight                              True
+layer4.1.bn1.weight                                True
+layer4.1.bn1.bias                                  True
+layer4.1.conv2.weight                              True
+layer4.1.bn2.weight                                True
+layer4.1.bn2.bias                                  True
+fc.1.weight                                        True
+fc.1.bias                                          True
+Trainable params: 8,394,754
+Total params: 11,171,266
+Percent trainable: 75.15%
+Class weights: tensor([0.8389, 1.2377], device='cuda:0')
+Trainable params: 8,394,754 / 11,171,266
+
+Fold 2: 151 train, 27 val, 44 test images
+Train Epoch: 1 [0/151 (0%)]	Loss: 0.830416
+Train Epoch 1 Average loss: 0.7228, Accuracy: 86/151 (56.95%)
+
+=== Validation at epoch 1 (every 1 epochs) ===
+Validation Loss: 0.6416
+Accuracy:          0.6667
+AUROC:             0.8056
+AUPRC:             0.7052
+F1-score:          0.7273
+Sensitivity:       1.0000
+Specificity:       0.4000
+TP=12, FP=9, TN=6, FN=0
+
+Validation results:
+  loss        : 0.6416
+  accuracy    : 0.6667
+  auroc       : 0.8056
+  auprc       : 0.7052
+  sensitivity : 1.0000
+  specificity : 0.4000
+  f1          : 0.7273
+=====================================================================
+
+[Best Model Update] auroc improved from -inf to 0.8056. Saving checkpoint to experiment_logs/run_20260621_083308/fold_2/best_model.pth
+Train Epoch: 2 [0/151 (0%)]	Loss: 0.450605
+Train Epoch 2 Average loss: 0.5211, Accuracy: 118/151 (78.15%)
+
+=== Validation at epoch 2 (every 1 epochs) ===
+Validation Loss: 0.6965
+Accuracy:          0.6667
+AUROC:             0.6444
+AUPRC:             0.5150
+F1-score:          0.6897
+Sensitivity:       0.8333
+Specificity:       0.5333
+TP=10, FP=7, TN=8, FN=2
+
+Validation results:
+  loss        : 0.6965
+  accuracy    : 0.6667
+  auroc       : 0.6444
+  auprc       : 0.5150
+  sensitivity : 0.8333
+  specificity : 0.5333
+  f1          : 0.6897
+=====================================================================
+
+[ES] No improvement in auroc: 1/10 (best=0.8056, current=0.6444)
+Train Epoch: 3 [0/151 (0%)]	Loss: 0.426952
+Train Epoch 3 Average loss: 0.5065, Accuracy: 117/151 (77.48%)
+
+=== Validation at epoch 3 (every 1 epochs) ===
+Validation Loss: 0.6653
+Accuracy:          0.7407
+AUROC:             0.7167
+AUPRC:             0.5734
+F1-score:          0.7586
+Sensitivity:       0.9167
+Specificity:       0.6000
+TP=11, FP=6, TN=9, FN=1
+
+Validation results:
+  loss        : 0.6653
+  accuracy    : 0.7407
+  auroc       : 0.7167
+  auprc       : 0.5734
+  sensitivity : 0.9167
+  specificity : 0.6000
+  f1          : 0.7586
+=====================================================================
+
+[ES] No improvement in auroc: 2/10 (best=0.8056, current=0.7167)
+Train Epoch: 4 [0/151 (0%)]	Loss: 0.816249
+Train Epoch 4 Average loss: 0.4221, Accuracy: 125/151 (82.78%)
+
+=== Validation at epoch 4 (every 1 epochs) ===
+Validation Loss: 0.6319
+Accuracy:          0.7778
+AUROC:             0.7944
+AUPRC:             0.6520
+F1-score:          0.7692
+Sensitivity:       0.8333
+Specificity:       0.7333
+TP=10, FP=4, TN=11, FN=2
+
+Validation results:
+  loss        : 0.6319
+  accuracy    : 0.7778
+  auroc       : 0.7944
+  auprc       : 0.6520
+  sensitivity : 0.8333
+  specificity : 0.7333
+  f1          : 0.7692
+=====================================================================
+
+[ES] No improvement in auroc: 3/10 (best=0.8056, current=0.7944)
+Train Epoch: 5 [0/151 (0%)]	Loss: 0.255418
+Train Epoch 5 Average loss: 0.4009, Accuracy: 121/151 (80.13%)
+
+=== Validation at epoch 5 (every 1 epochs) ===
+Validation Loss: 0.5980
+Accuracy:          0.8148
+AUROC:             0.8278
+AUPRC:             0.6969
+F1-score:          0.8000
+Sensitivity:       0.8333
+Specificity:       0.8000
+TP=10, FP=3, TN=12, FN=2
+
+Validation results:
+  loss        : 0.5980
+  accuracy    : 0.8148
+  auroc       : 0.8278
+  auprc       : 0.6969
+  sensitivity : 0.8333
+  specificity : 0.8000
+  f1          : 0.8000
+=====================================================================
+
+[Best Model Update] auroc improved from 0.8056 to 0.8278. Saving checkpoint to experiment_logs/run_20260621_083308/fold_2/best_model.pth
+Train Epoch: 6 [0/151 (0%)]	Loss: 0.267278
+Train Epoch 6 Average loss: 0.3002, Accuracy: 133/151 (88.08%)
+
+=== Validation at epoch 6 (every 1 epochs) ===
+Validation Loss: 0.5403
+Accuracy:          0.8519
+AUROC:             0.8722
+AUPRC:             0.7861
+F1-score:          0.8462
+Sensitivity:       0.9167
+Specificity:       0.8000
+TP=11, FP=3, TN=12, FN=1
+
+Validation results:
+  loss        : 0.5403
+  accuracy    : 0.8519
+  auroc       : 0.8722
+  auprc       : 0.7861
+  sensitivity : 0.9167
+  specificity : 0.8000
+  f1          : 0.8462
+=====================================================================
+
+[Best Model Update] auroc improved from 0.8278 to 0.8722. Saving checkpoint to experiment_logs/run_20260621_083308/fold_2/best_model.pth
+Train Epoch: 7 [0/151 (0%)]	Loss: 0.217230
+Train Epoch 7 Average loss: 0.2186, Accuracy: 139/151 (92.05%)
+
+=== Validation at epoch 7 (every 1 epochs) ===
+Validation Loss: 0.4875
+Accuracy:          0.8148
+AUROC:             0.8944
+AUPRC:             0.8129
+F1-score:          0.7826
+Sensitivity:       0.7500
+Specificity:       0.8667
+TP=9, FP=2, TN=13, FN=3
+
+Validation results:
+  loss        : 0.4875
+  accuracy    : 0.8148
+  auroc       : 0.8944
+  auprc       : 0.8129
+  sensitivity : 0.7500
+  specificity : 0.8667
+  f1          : 0.7826
+=====================================================================
+
+[Best Model Update] auroc improved from 0.8722 to 0.8944. Saving checkpoint to experiment_logs/run_20260621_083308/fold_2/best_model.pth
+Train Epoch: 8 [0/151 (0%)]	Loss: 0.173680
+Train Epoch 8 Average loss: 0.1977, Accuracy: 141/151 (93.38%)
+
+=== Validation at epoch 8 (every 1 epochs) ===
+Validation Loss: 0.4685
+Accuracy:          0.7778
+AUROC:             0.8944
+AUPRC:             0.8147
+F1-score:          0.7500
+Sensitivity:       0.7500
+Specificity:       0.8000
+TP=9, FP=3, TN=12, FN=3
+
+Validation results:
+  loss        : 0.4685
+  accuracy    : 0.7778
+  auroc       : 0.8944
+  auprc       : 0.8147
+  sensitivity : 0.7500
+  specificity : 0.8000
+  f1          : 0.7500
+=====================================================================
+
+[ES] No improvement in auroc: 1/10 (best=0.8944, current=0.8944)
+Train Epoch: 9 [0/151 (0%)]	Loss: 0.157469
+Train Epoch 9 Average loss: 0.1700, Accuracy: 143/151 (94.70%)
+
+=== Validation at epoch 9 (every 1 epochs) ===
+Validation Loss: 0.4387
+Accuracy:          0.8889
+AUROC:             0.9167
+AUPRC:             0.8388
+F1-score:          0.8696
+Sensitivity:       0.8333
+Specificity:       0.9333
+TP=10, FP=1, TN=14, FN=2
+
+Validation results:
+  loss        : 0.4387
+  accuracy    : 0.8889
+  auroc       : 0.9167
+  auprc       : 0.8388
+  sensitivity : 0.8333
+  specificity : 0.9333
+  f1          : 0.8696
+=====================================================================
+
+[Best Model Update] auroc improved from 0.8944 to 0.9167. Saving checkpoint to experiment_logs/run_20260621_083308/fold_2/best_model.pth
+Train Epoch: 10 [0/151 (0%)]	Loss: 0.188956
+Train Epoch 10 Average loss: 0.1212, Accuracy: 148/151 (98.01%)
+
+=== Validation at epoch 10 (every 1 epochs) ===
+Validation Loss: 0.4572
+Accuracy:          0.8519
+AUROC:             0.9111
+AUPRC:             0.7972
+F1-score:          0.8182
+Sensitivity:       0.7500
+Specificity:       0.9333
+TP=9, FP=1, TN=14, FN=3
+
+Validation results:
+  loss        : 0.4572
+  accuracy    : 0.8519
+  auroc       : 0.9111
+  auprc       : 0.7972
+  sensitivity : 0.7500
+  specificity : 0.9333
+  f1          : 0.8182
+=====================================================================
+
+[ES] No improvement in auroc: 1/10 (best=0.9167, current=0.9111)
+Train Epoch: 11 [0/151 (0%)]	Loss: 0.174214
+Train Epoch 11 Average loss: 0.1411, Accuracy: 145/151 (96.03%)
+
+=== Validation at epoch 11 (every 1 epochs) ===
+Validation Loss: 0.4432
+Accuracy:          0.8889
+AUROC:             0.9111
+AUPRC:             0.7972
+F1-score:          0.8696
+Sensitivity:       0.8333
+Specificity:       0.9333
+TP=10, FP=1, TN=14, FN=2
+
+Validation results:
+  loss        : 0.4432
+  accuracy    : 0.8889
+  auroc       : 0.9111
+  auprc       : 0.7972
+  sensitivity : 0.8333
+  specificity : 0.9333
+  f1          : 0.8696
+=====================================================================
+
+[ES] No improvement in auroc: 2/10 (best=0.9167, current=0.9111)
+Train Epoch: 12 [0/151 (0%)]	Loss: 0.173927
+Train Epoch 12 Average loss: 0.0948, Accuracy: 150/151 (99.34%)
+
+=== Validation at epoch 12 (every 1 epochs) ===
+Validation Loss: 0.4132
+Accuracy:          0.8889
+AUROC:             0.9167
+AUPRC:             0.8388
+F1-score:          0.8696
+Sensitivity:       0.8333
+Specificity:       0.9333
+TP=10, FP=1, TN=14, FN=2
+
+Validation results:
+  loss        : 0.4132
+  accuracy    : 0.8889
+  auroc       : 0.9167
+  auprc       : 0.8388
+  sensitivity : 0.8333
+  specificity : 0.9333
+  f1          : 0.8696
+=====================================================================
+
+[ES] No improvement in auroc: 3/10 (best=0.9167, current=0.9167)
+Train Epoch: 13 [0/151 (0%)]	Loss: 0.093994
+Train Epoch 13 Average loss: 0.0604, Accuracy: 151/151 (100.00%)
+
+=== Validation at epoch 13 (every 1 epochs) ===
+Validation Loss: 0.4599
+Accuracy:          0.8889
+AUROC:             0.9167
+AUPRC:             0.8022
+F1-score:          0.8696
+Sensitivity:       0.8333
+Specificity:       0.9333
+TP=10, FP=1, TN=14, FN=2
+
+Validation results:
+  loss        : 0.4599
+  accuracy    : 0.8889
+  auroc       : 0.9167
+  auprc       : 0.8022
+  sensitivity : 0.8333
+  specificity : 0.9333
+  f1          : 0.8696
+=====================================================================
+
+[ES] No improvement in auroc: 4/10 (best=0.9167, current=0.9167)
+Train Epoch: 14 [0/151 (0%)]	Loss: 0.032377
+Train Epoch 14 Average loss: 0.0622, Accuracy: 150/151 (99.34%)
+
+=== Validation at epoch 14 (every 1 epochs) ===
+Validation Loss: 0.4788
+Accuracy:          0.8519
+AUROC:             0.9111
+AUPRC:             0.7972
+F1-score:          0.8182
+Sensitivity:       0.7500
+Specificity:       0.9333
+TP=9, FP=1, TN=14, FN=3
+
+Validation results:
+  loss        : 0.4788
+  accuracy    : 0.8519
+  auroc       : 0.9111
+  auprc       : 0.7972
+  sensitivity : 0.7500
+  specificity : 0.9333
+  f1          : 0.8182
+=====================================================================
+
+[ES] No improvement in auroc: 5/10 (best=0.9167, current=0.9111)
+Train Epoch: 15 [0/151 (0%)]	Loss: 0.026841
+Train Epoch 15 Average loss: 0.0480, Accuracy: 150/151 (99.34%)
+
+=== Validation at epoch 15 (every 1 epochs) ===
+Validation Loss: 0.4817
+Accuracy:          0.8519
+AUROC:             0.9111
+AUPRC:             0.7972
+F1-score:          0.8182
+Sensitivity:       0.7500
+Specificity:       0.9333
+TP=9, FP=1, TN=14, FN=3
+
+Validation results:
+  loss        : 0.4817
+  accuracy    : 0.8519
+  auroc       : 0.9111
+  auprc       : 0.7972
+  sensitivity : 0.7500
+  specificity : 0.9333
+  f1          : 0.8182
+=====================================================================
+
+[ES] No improvement in auroc: 6/10 (best=0.9167, current=0.9111)
+Train Epoch: 16 [0/151 (0%)]	Loss: 0.108296
+Train Epoch 16 Average loss: 0.0689, Accuracy: 148/151 (98.01%)
+
+=== Validation at epoch 16 (every 1 epochs) ===
+Validation Loss: 0.4514
+Accuracy:          0.8889
+AUROC:             0.9167
+AUPRC:             0.8388
+F1-score:          0.8696
+Sensitivity:       0.8333
+Specificity:       0.9333
+TP=10, FP=1, TN=14, FN=2
+
+Validation results:
+  loss        : 0.4514
+  accuracy    : 0.8889
+  auroc       : 0.9167
+  auprc       : 0.8388
+  sensitivity : 0.8333
+  specificity : 0.9333
+  f1          : 0.8696
+=====================================================================
+
+[ES] No improvement in auroc: 7/10 (best=0.9167, current=0.9167)
+Train Epoch: 17 [0/151 (0%)]	Loss: 0.014117
+Train Epoch 17 Average loss: 0.0287, Accuracy: 151/151 (100.00%)
+
+=== Validation at epoch 17 (every 1 epochs) ===
+Validation Loss: 0.6043
+Accuracy:          0.7778
+AUROC:             0.9000
+AUPRC:             0.7840
+F1-score:          0.7273
+Sensitivity:       0.6667
+Specificity:       0.8667
+TP=8, FP=2, TN=13, FN=4
+
+Validation results:
+  loss        : 0.6043
+  accuracy    : 0.7778
+  auroc       : 0.9000
+  auprc       : 0.7840
+  sensitivity : 0.6667
+  specificity : 0.8667
+  f1          : 0.7273
+=====================================================================
+
+[ES] No improvement in auroc: 8/10 (best=0.9167, current=0.9000)
+Train Epoch: 18 [0/151 (0%)]	Loss: 0.022361
+Train Epoch 18 Average loss: 0.0324, Accuracy: 150/151 (99.34%)
+
+=== Validation at epoch 18 (every 1 epochs) ===
+Validation Loss: 0.6115
+Accuracy:          0.7778
+AUROC:             0.8944
+AUPRC:             0.7766
+F1-score:          0.7273
+Sensitivity:       0.6667
+Specificity:       0.8667
+TP=8, FP=2, TN=13, FN=4
+
+Validation results:
+  loss        : 0.6115
+  accuracy    : 0.7778
+  auroc       : 0.8944
+  auprc       : 0.7766
+  sensitivity : 0.6667
+  specificity : 0.8667
+  f1          : 0.7273
+=====================================================================
+
+[ES] No improvement in auroc: 9/10 (best=0.9167, current=0.8944)
+Train Epoch: 19 [0/151 (0%)]	Loss: 0.017081
+Train Epoch 19 Average loss: 0.0240, Accuracy: 151/151 (100.00%)
+
+=== Validation at epoch 19 (every 1 epochs) ===
+Validation Loss: 0.5770
+Accuracy:          0.8148
+AUROC:             0.9000
+AUPRC:             0.7840
+F1-score:          0.7826
+Sensitivity:       0.7500
+Specificity:       0.8667
+TP=9, FP=2, TN=13, FN=3
+
+Validation results:
+  loss        : 0.5770
+  accuracy    : 0.8148
+  auroc       : 0.9000
+  auprc       : 0.7840
+  sensitivity : 0.7500
+  specificity : 0.8667
+  f1          : 0.7826
+=====================================================================
+
+[ES] No improvement in auroc: 10/10 (best=0.9167, current=0.9000)
+
+[Early stopping triggered at epoch 19] Validation auroc has not improved for 10 periods.
+
+Early stopping triggered — breaking training loop.
+
+Loading best model from experiment_logs/run_20260621_083308/fold_2/best_model.pth for final evaluation...
+Using validation threshold 0.5000
+Using validation threshold 0.5000
+Validation Loss: 0.5719
+Accuracy:          0.7500
+AUROC:             0.8162
+AUPRC:             0.8109
+F1-score:          0.7179
+Sensitivity:       0.7778
+Specificity:       0.7308
+TP=14, FP=7, TN=19, FN=4
+
+Fold 2 Results:
+Accuracy    : 0.7500
+AUROC       : 0.8162
+AUPRC       : 0.8109
+
+=== FINAL METRICS (Best AUROC Model) ===
+  loss        : 0.5719
+  accuracy    : 0.7500
+  auroc       : 0.8162
+  auprc       : 0.8109
+  sensitivity : 0.7778
+  specificity : 0.7308
+  f1          : 0.7179
+=====================================================
+
+
+============================================================
+TRAINING FOLD 3
+============================================================
+
+=== TRAINABLE PARAMETERS ===
+conv1.weight                                       False
+bn1.weight                                         False
+bn1.bias                                           False
+layer1.0.conv1.weight                              False
+layer1.0.bn1.weight                                False
+layer1.0.bn1.bias                                  False
+layer1.0.conv2.weight                              False
+layer1.0.bn2.weight                                False
+layer1.0.bn2.bias                                  False
+layer1.1.conv1.weight                              False
+layer1.1.bn1.weight                                False
+layer1.1.bn1.bias                                  False
+layer1.1.conv2.weight                              False
+layer1.1.bn2.weight                                False
+layer1.1.bn2.bias                                  False
+layer2.0.conv1.weight                              False
+layer2.0.bn1.weight                                False
+layer2.0.bn1.bias                                  False
+layer2.0.conv2.weight                              False
+layer2.0.bn2.weight                                False
+layer2.0.bn2.bias                                  False
+layer2.0.downsample.0.weight                       False
+layer2.0.downsample.1.weight                       False
+layer2.0.downsample.1.bias                         False
+layer2.1.conv1.weight                              False
+layer2.1.bn1.weight                                False
+layer2.1.bn1.bias                                  False
+layer2.1.conv2.weight                              False
+layer2.1.bn2.weight                                False
+layer2.1.bn2.bias                                  False
+layer3.0.conv1.weight                              False
+layer3.0.bn1.weight                                False
+layer3.0.bn1.bias                                  False
+layer3.0.conv2.weight                              False
+layer3.0.bn2.weight                                False
+layer3.0.bn2.bias                                  False
+layer3.0.downsample.0.weight                       False
+layer3.0.downsample.1.weight                       False
+layer3.0.downsample.1.bias                         False
+layer3.1.conv1.weight                              False
+layer3.1.bn1.weight                                False
+layer3.1.bn1.bias                                  False
+layer3.1.conv2.weight                              False
+layer3.1.bn2.weight                                False
+layer3.1.bn2.bias                                  False
+layer4.0.conv1.weight                              True
+layer4.0.bn1.weight                                True
+layer4.0.bn1.bias                                  True
+layer4.0.conv2.weight                              True
+layer4.0.bn2.weight                                True
+layer4.0.bn2.bias                                  True
+layer4.0.downsample.0.weight                       True
+layer4.0.downsample.1.weight                       True
+layer4.0.downsample.1.bias                         True
+layer4.1.conv1.weight                              True
+layer4.1.bn1.weight                                True
+layer4.1.bn1.bias                                  True
+layer4.1.conv2.weight                              True
+layer4.1.bn2.weight                                True
+layer4.1.bn2.bias                                  True
+fc.1.weight                                        True
+fc.1.bias                                          True
+Trainable params: 8,394,754
+Total params: 11,171,266
+Percent trainable: 75.15%
+Class weights: tensor([0.8596, 1.1953], device='cuda:0')
+Trainable params: 8,394,754 / 11,171,266
+
+Fold 3: 153 train, 28 val, 41 test images
+Train Epoch: 1 [0/153 (0%)]	Loss: 0.832830
+Train Epoch 1 Average loss: 0.7767, Accuracy: 80/153 (52.29%)
+
+=== Validation at epoch 1 (every 1 epochs) ===
+Validation Loss: 0.5879
+Accuracy:          0.6786
+AUROC:             0.8021
+AUPRC:             0.6435
+F1-score:          0.4000
+Sensitivity:       0.2727
+Specificity:       0.9412
+TP=3, FP=1, TN=16, FN=8
+
+Validation results:
+  loss        : 0.5879
+  accuracy    : 0.6786
+  auroc       : 0.8021
+  auprc       : 0.6435
+  sensitivity : 0.2727
+  specificity : 0.9412
+  f1          : 0.4000
+=====================================================================
+
+[Best Model Update] auroc improved from -inf to 0.8021. Saving checkpoint to experiment_logs/run_20260621_083308/fold_3/best_model.pth
+Train Epoch: 2 [0/153 (0%)]	Loss: 0.377686
+Train Epoch 2 Average loss: 0.5328, Accuracy: 104/153 (67.97%)
+
+=== Validation at epoch 2 (every 1 epochs) ===
+Validation Loss: 0.5445
+Accuracy:          0.6786
+AUROC:             0.8342
+AUPRC:             0.7156
+F1-score:          0.4706
+Sensitivity:       0.3636
+Specificity:       0.8824
+TP=4, FP=2, TN=15, FN=7
+
+Validation results:
+  loss        : 0.5445
+  accuracy    : 0.6786
+  auroc       : 0.8342
+  auprc       : 0.7156
+  sensitivity : 0.3636
+  specificity : 0.8824
+  f1          : 0.4706
+=====================================================================
+
+[Best Model Update] auroc improved from 0.8021 to 0.8342. Saving checkpoint to experiment_logs/run_20260621_083308/fold_3/best_model.pth
+Train Epoch: 3 [0/153 (0%)]	Loss: 0.414146
+Train Epoch 3 Average loss: 0.4537, Accuracy: 120/153 (78.43%)
+
+=== Validation at epoch 3 (every 1 epochs) ===
+Validation Loss: 0.5336
+Accuracy:          0.6786
+AUROC:             0.8396
+AUPRC:             0.7238
+F1-score:          0.4706
+Sensitivity:       0.3636
+Specificity:       0.8824
+TP=4, FP=2, TN=15, FN=7
+
+Validation results:
+  loss        : 0.5336
+  accuracy    : 0.6786
+  auroc       : 0.8396
+  auprc       : 0.7238
+  sensitivity : 0.3636
+  specificity : 0.8824
+  f1          : 0.4706
+=====================================================================
+
+[Best Model Update] auroc improved from 0.8342 to 0.8396. Saving checkpoint to experiment_logs/run_20260621_083308/fold_3/best_model.pth
+Train Epoch: 4 [0/153 (0%)]	Loss: 0.408243
+Train Epoch 4 Average loss: 0.3487, Accuracy: 131/153 (85.62%)
+
+=== Validation at epoch 4 (every 1 epochs) ===
+Validation Loss: 0.5615
+Accuracy:          0.7143
+AUROC:             0.8289
+AUPRC:             0.7150
+F1-score:          0.5556
+Sensitivity:       0.4545
+Specificity:       0.8824
+TP=5, FP=2, TN=15, FN=6
+
+Validation results:
+  loss        : 0.5615
+  accuracy    : 0.7143
+  auroc       : 0.8289
+  auprc       : 0.7150
+  sensitivity : 0.4545
+  specificity : 0.8824
+  f1          : 0.5556
+=====================================================================
+
+[ES] No improvement in auroc: 1/10 (best=0.8396, current=0.8289)
+Train Epoch: 5 [0/153 (0%)]	Loss: 0.347844
+Train Epoch 5 Average loss: 0.3427, Accuracy: 133/153 (86.93%)
+
+=== Validation at epoch 5 (every 1 epochs) ===
+Validation Loss: 0.6029
+Accuracy:          0.6786
+AUROC:             0.7540
+AUPRC:             0.6655
+F1-score:          0.5263
+Sensitivity:       0.4545
+Specificity:       0.8235
+TP=5, FP=3, TN=14, FN=6
+
+Validation results:
+  loss        : 0.6029
+  accuracy    : 0.6786
+  auroc       : 0.7540
+  auprc       : 0.6655
+  sensitivity : 0.4545
+  specificity : 0.8235
+  f1          : 0.5263
+=====================================================================
+
+[ES] No improvement in auroc: 2/10 (best=0.8396, current=0.7540)
+Train Epoch: 6 [0/153 (0%)]	Loss: 0.234683
+Train Epoch 6 Average loss: 0.2459, Accuracy: 140/153 (91.50%)
+
+=== Validation at epoch 6 (every 1 epochs) ===
+Validation Loss: 0.5800
+Accuracy:          0.7143
+AUROC:             0.7807
+AUPRC:             0.6967
+F1-score:          0.5556
+Sensitivity:       0.4545
+Specificity:       0.8824
+TP=5, FP=2, TN=15, FN=6
+
+Validation results:
+  loss        : 0.5800
+  accuracy    : 0.7143
+  auroc       : 0.7807
+  auprc       : 0.6967
+  sensitivity : 0.4545
+  specificity : 0.8824
+  f1          : 0.5556
+=====================================================================
+
+[ES] No improvement in auroc: 3/10 (best=0.8396, current=0.7807)
+Train Epoch: 7 [0/153 (0%)]	Loss: 0.367568
+Train Epoch 7 Average loss: 0.2609, Accuracy: 139/153 (90.85%)
+
+=== Validation at epoch 7 (every 1 epochs) ===
+Validation Loss: 0.5531
+Accuracy:          0.7500
+AUROC:             0.7914
+AUPRC:             0.7468
+F1-score:          0.6316
+Sensitivity:       0.5455
+Specificity:       0.8824
+TP=6, FP=2, TN=15, FN=5
+
+Validation results:
+  loss        : 0.5531
+  accuracy    : 0.7500
+  auroc       : 0.7914
+  auprc       : 0.7468
+  sensitivity : 0.5455
+  specificity : 0.8824
+  f1          : 0.6316
+=====================================================================
+
+[ES] No improvement in auroc: 4/10 (best=0.8396, current=0.7914)
+Train Epoch: 8 [0/153 (0%)]	Loss: 0.238694
+Train Epoch 8 Average loss: 0.1475, Accuracy: 150/153 (98.04%)
+
+=== Validation at epoch 8 (every 1 epochs) ===
+Validation Loss: 0.4972
+Accuracy:          0.7500
+AUROC:             0.8235
+AUPRC:             0.7852
+F1-score:          0.6667
+Sensitivity:       0.6364
+Specificity:       0.8235
+TP=7, FP=3, TN=14, FN=4
+
+Validation results:
+  loss        : 0.4972
+  accuracy    : 0.7500
+  auroc       : 0.8235
+  auprc       : 0.7852
+  sensitivity : 0.6364
+  specificity : 0.8235
+  f1          : 0.6667
+=====================================================================
+
+[ES] No improvement in auroc: 5/10 (best=0.8396, current=0.8235)
+Train Epoch: 9 [0/153 (0%)]	Loss: 0.155380
+Train Epoch 9 Average loss: 0.1625, Accuracy: 146/153 (95.42%)
+
+=== Validation at epoch 9 (every 1 epochs) ===
+Validation Loss: 0.4808
+Accuracy:          0.7857
+AUROC:             0.8449
+AUPRC:             0.8059
+F1-score:          0.7273
+Sensitivity:       0.7273
+Specificity:       0.8235
+TP=8, FP=3, TN=14, FN=3
+
+Validation results:
+  loss        : 0.4808
+  accuracy    : 0.7857
+  auroc       : 0.8449
+  auprc       : 0.8059
+  sensitivity : 0.7273
+  specificity : 0.8235
+  f1          : 0.7273
+=====================================================================
+
+[Best Model Update] auroc improved from 0.8396 to 0.8449. Saving checkpoint to experiment_logs/run_20260621_083308/fold_3/best_model.pth
+Train Epoch: 10 [0/153 (0%)]	Loss: 0.197479
+Train Epoch 10 Average loss: 0.1423, Accuracy: 148/153 (96.73%)
+
+=== Validation at epoch 10 (every 1 epochs) ===
+Validation Loss: 0.4687
+Accuracy:          0.7500
+AUROC:             0.8556
+AUPRC:             0.8354
+F1-score:          0.7200
+Sensitivity:       0.8182
+Specificity:       0.7059
+TP=9, FP=5, TN=12, FN=2
+
+Validation results:
+  loss        : 0.4687
+  accuracy    : 0.7500
+  auroc       : 0.8556
+  auprc       : 0.8354
+  sensitivity : 0.8182
+  specificity : 0.7059
+  f1          : 0.7200
+=====================================================================
+
+[Best Model Update] auroc improved from 0.8449 to 0.8556. Saving checkpoint to experiment_logs/run_20260621_083308/fold_3/best_model.pth
+Train Epoch: 11 [0/153 (0%)]	Loss: 0.521782
+Train Epoch 11 Average loss: 0.1188, Accuracy: 148/153 (96.73%)
+
+=== Validation at epoch 11 (every 1 epochs) ===
+Validation Loss: 0.4781
+Accuracy:          0.7143
+AUROC:             0.8342
+AUPRC:             0.8060
+F1-score:          0.6667
+Sensitivity:       0.7273
+Specificity:       0.7059
+TP=8, FP=5, TN=12, FN=3
+
+Validation results:
+  loss        : 0.4781
+  accuracy    : 0.7143
+  auroc       : 0.8342
+  auprc       : 0.8060
+  sensitivity : 0.7273
+  specificity : 0.7059
+  f1          : 0.6667
+=====================================================================
+
+[ES] No improvement in auroc: 1/10 (best=0.8556, current=0.8342)
+Train Epoch: 12 [0/153 (0%)]	Loss: 0.045116
+Train Epoch 12 Average loss: 0.0903, Accuracy: 151/153 (98.69%)
+
+=== Validation at epoch 12 (every 1 epochs) ===
+Validation Loss: 0.5125
+Accuracy:          0.7143
+AUROC:             0.8075
+AUPRC:             0.7653
+F1-score:          0.6667
+Sensitivity:       0.7273
+Specificity:       0.7059
+TP=8, FP=5, TN=12, FN=3
+
+Validation results:
+  loss        : 0.5125
+  accuracy    : 0.7143
+  auroc       : 0.8075
+  auprc       : 0.7653
+  sensitivity : 0.7273
+  specificity : 0.7059
+  f1          : 0.6667
+=====================================================================
+
+[ES] No improvement in auroc: 2/10 (best=0.8556, current=0.8075)
+Train Epoch: 13 [0/153 (0%)]	Loss: 0.086361
+Train Epoch 13 Average loss: 0.0764, Accuracy: 151/153 (98.69%)
+
+=== Validation at epoch 13 (every 1 epochs) ===
+Validation Loss: 0.4773
+Accuracy:          0.7500
+AUROC:             0.8396
+AUPRC:             0.8246
+F1-score:          0.7200
+Sensitivity:       0.8182
+Specificity:       0.7059
+TP=9, FP=5, TN=12, FN=2
+
+Validation results:
+  loss        : 0.4773
+  accuracy    : 0.7500
+  auroc       : 0.8396
+  auprc       : 0.8246
+  sensitivity : 0.8182
+  specificity : 0.7059
+  f1          : 0.7200
+=====================================================================
+
+[ES] No improvement in auroc: 3/10 (best=0.8556, current=0.8396)
+Train Epoch: 14 [0/153 (0%)]	Loss: 0.113958
+Train Epoch 14 Average loss: 0.0728, Accuracy: 150/153 (98.04%)
+
+=== Validation at epoch 14 (every 1 epochs) ===
+Validation Loss: 0.4728
+Accuracy:          0.7500
+AUROC:             0.8449
+AUPRC:             0.8316
+F1-score:          0.7200
+Sensitivity:       0.8182
+Specificity:       0.7059
+TP=9, FP=5, TN=12, FN=2
+
+Validation results:
+  loss        : 0.4728
+  accuracy    : 0.7500
+  auroc       : 0.8449
+  auprc       : 0.8316
+  sensitivity : 0.8182
+  specificity : 0.7059
+  f1          : 0.7200
+=====================================================================
+
+[ES] No improvement in auroc: 4/10 (best=0.8556, current=0.8449)
+Train Epoch: 15 [0/153 (0%)]	Loss: 0.029994
+Train Epoch 15 Average loss: 0.0434, Accuracy: 153/153 (100.00%)
+
+=== Validation at epoch 15 (every 1 epochs) ===
+Validation Loss: 0.5148
+Accuracy:          0.7500
+AUROC:             0.8396
+AUPRC:             0.8250
+F1-score:          0.6957
+Sensitivity:       0.7273
+Specificity:       0.7647
+TP=8, FP=4, TN=13, FN=3
+
+Validation results:
+  loss        : 0.5148
+  accuracy    : 0.7500
+  auroc       : 0.8396
+  auprc       : 0.8250
+  sensitivity : 0.7273
+  specificity : 0.7647
+  f1          : 0.6957
+=====================================================================
+
+[ES] No improvement in auroc: 5/10 (best=0.8556, current=0.8396)
+Train Epoch: 16 [0/153 (0%)]	Loss: 0.024460
+Train Epoch 16 Average loss: 0.0401, Accuracy: 152/153 (99.35%)
+
+=== Validation at epoch 16 (every 1 epochs) ===
+Validation Loss: 0.5752
+Accuracy:          0.7143
+AUROC:             0.8182
+AUPRC:             0.7980
+F1-score:          0.6667
+Sensitivity:       0.7273
+Specificity:       0.7059
+TP=8, FP=5, TN=12, FN=3
+
+Validation results:
+  loss        : 0.5752
+  accuracy    : 0.7143
+  auroc       : 0.8182
+  auprc       : 0.7980
+  sensitivity : 0.7273
+  specificity : 0.7059
+  f1          : 0.6667
+=====================================================================
+
+[ES] No improvement in auroc: 6/10 (best=0.8556, current=0.8182)
+Train Epoch: 17 [0/153 (0%)]	Loss: 0.042890
+Train Epoch 17 Average loss: 0.0489, Accuracy: 153/153 (100.00%)
+
+=== Validation at epoch 17 (every 1 epochs) ===
+Validation Loss: 0.5535
+Accuracy:          0.7143
+AUROC:             0.8128
+AUPRC:             0.7968
+F1-score:          0.6667
+Sensitivity:       0.7273
+Specificity:       0.7059
+TP=8, FP=5, TN=12, FN=3
+
+Validation results:
+  loss        : 0.5535
+  accuracy    : 0.7143
+  auroc       : 0.8128
+  auprc       : 0.7968
+  sensitivity : 0.7273
+  specificity : 0.7059
+  f1          : 0.6667
+=====================================================================
+
+[ES] No improvement in auroc: 7/10 (best=0.8556, current=0.8128)
+Train Epoch: 18 [0/153 (0%)]	Loss: 0.022713
+Train Epoch 18 Average loss: 0.0218, Accuracy: 153/153 (100.00%)
+
+=== Validation at epoch 18 (every 1 epochs) ===
+Validation Loss: 0.5316
+Accuracy:          0.7143
+AUROC:             0.8235
+AUPRC:             0.8004
+F1-score:          0.6000
+Sensitivity:       0.5455
+Specificity:       0.8235
+TP=6, FP=3, TN=14, FN=5
+
+Validation results:
+  loss        : 0.5316
+  accuracy    : 0.7143
+  auroc       : 0.8235
+  auprc       : 0.8004
+  sensitivity : 0.5455
+  specificity : 0.8235
+  f1          : 0.6000
+=====================================================================
+
+[ES] No improvement in auroc: 8/10 (best=0.8556, current=0.8235)
+Train Epoch: 19 [0/153 (0%)]	Loss: 0.032567
+Train Epoch 19 Average loss: 0.0363, Accuracy: 152/153 (99.35%)
+
+=== Validation at epoch 19 (every 1 epochs) ===
+Validation Loss: 0.5286
+Accuracy:          0.7143
+AUROC:             0.8289
+AUPRC:             0.8071
+F1-score:          0.6000
+Sensitivity:       0.5455
+Specificity:       0.8235
+TP=6, FP=3, TN=14, FN=5
+
+Validation results:
+  loss        : 0.5286
+  accuracy    : 0.7143
+  auroc       : 0.8289
+  auprc       : 0.8071
+  sensitivity : 0.5455
+  specificity : 0.8235
+  f1          : 0.6000
+=====================================================================
+
+[ES] No improvement in auroc: 9/10 (best=0.8556, current=0.8289)
+Train Epoch: 20 [0/153 (0%)]	Loss: 0.026278
+Train Epoch 20 Average loss: 0.0220, Accuracy: 153/153 (100.00%)
+
+=== Validation at epoch 20 (every 1 epochs) ===
+Validation Loss: 0.5177
+Accuracy:          0.6786
+AUROC:             0.8235
+AUPRC:             0.8110
+F1-score:          0.6087
+Sensitivity:       0.6364
+Specificity:       0.7059
+TP=7, FP=5, TN=12, FN=4
+
+Validation results:
+  loss        : 0.5177
+  accuracy    : 0.6786
+  auroc       : 0.8235
+  auprc       : 0.8110
+  sensitivity : 0.6364
+  specificity : 0.7059
+  f1          : 0.6087
+=====================================================================
+
+[ES] No improvement in auroc: 10/10 (best=0.8556, current=0.8235)
+
+[Early stopping triggered at epoch 20] Validation auroc has not improved for 10 periods.
+
+Early stopping triggered — breaking training loop.
+
+Loading best model from experiment_logs/run_20260621_083308/fold_3/best_model.pth for final evaluation...
+Using validation threshold 0.5000
+Using validation threshold 0.5000
+Validation Loss: 0.5399
+Accuracy:          0.7317
+AUROC:             0.8100
+AUPRC:             0.8197
+F1-score:          0.6207
+Sensitivity:       0.5625
+Specificity:       0.8400
+TP=9, FP=4, TN=21, FN=7
+
+Fold 3 Results:
+Accuracy    : 0.7317
+AUROC       : 0.8100
+AUPRC       : 0.8197
+
+=== FINAL METRICS (Best AUROC Model) ===
+  loss        : 0.5399
+  accuracy    : 0.7317
+  auroc       : 0.8100
+  auprc       : 0.8197
+  sensitivity : 0.5625
+  specificity : 0.8400
+  f1          : 0.6207
+=====================================================
+
+
+============================================================
+TRAINING FOLD 4
+============================================================
+
+=== TRAINABLE PARAMETERS ===
+conv1.weight                                       False
+bn1.weight                                         False
+bn1.bias                                           False
+layer1.0.conv1.weight                              False
+layer1.0.bn1.weight                                False
+layer1.0.bn1.bias                                  False
+layer1.0.conv2.weight                              False
+layer1.0.bn2.weight                                False
+layer1.0.bn2.bias                                  False
+layer1.1.conv1.weight                              False
+layer1.1.bn1.weight                                False
+layer1.1.bn1.bias                                  False
+layer1.1.conv2.weight                              False
+layer1.1.bn2.weight                                False
+layer1.1.bn2.bias                                  False
+layer2.0.conv1.weight                              False
+layer2.0.bn1.weight                                False
+layer2.0.bn1.bias                                  False
+layer2.0.conv2.weight                              False
+layer2.0.bn2.weight                                False
+layer2.0.bn2.bias                                  False
+layer2.0.downsample.0.weight                       False
+layer2.0.downsample.1.weight                       False
+layer2.0.downsample.1.bias                         False
+layer2.1.conv1.weight                              False
+layer2.1.bn1.weight                                False
+layer2.1.bn1.bias                                  False
+layer2.1.conv2.weight                              False
+layer2.1.bn2.weight                                False
+layer2.1.bn2.bias                                  False
+layer3.0.conv1.weight                              False
+layer3.0.bn1.weight                                False
+layer3.0.bn1.bias                                  False
+layer3.0.conv2.weight                              False
+layer3.0.bn2.weight                                False
+layer3.0.bn2.bias                                  False
+layer3.0.downsample.0.weight                       False
+layer3.0.downsample.1.weight                       False
+layer3.0.downsample.1.bias                         False
+layer3.1.conv1.weight                              False
+layer3.1.bn1.weight                                False
+layer3.1.bn1.bias                                  False
+layer3.1.conv2.weight                              False
+layer3.1.bn2.weight                                False
+layer3.1.bn2.bias                                  False
+layer4.0.conv1.weight                              True
+layer4.0.bn1.weight                                True
+layer4.0.bn1.bias                                  True
+layer4.0.conv2.weight                              True
+layer4.0.bn2.weight                                True
+layer4.0.bn2.bias                                  True
+layer4.0.downsample.0.weight                       True
+layer4.0.downsample.1.weight                       True
+layer4.0.downsample.1.bias                         True
+layer4.1.conv1.weight                              True
+layer4.1.bn1.weight                                True
+layer4.1.bn1.bias                                  True
+layer4.1.conv2.weight                              True
+layer4.1.bn2.weight                                True
+layer4.1.bn2.bias                                  True
+fc.1.weight                                        True
+fc.1.bias                                          True
+Trainable params: 8,394,754
+Total params: 11,171,266
+Percent trainable: 75.15%
+Class weights: tensor([0.8352, 1.2458], device='cuda:0')
+Trainable params: 8,394,754 / 11,171,266
+
+Fold 4: 147 train, 30 val, 45 test images
+Train Epoch: 1 [0/147 (0%)]	Loss: 0.969900
+Train Epoch 1 Average loss: 0.7190, Accuracy: 85/147 (57.82%)
+
+=== Validation at epoch 1 (every 1 epochs) ===
+Validation Loss: 0.5516
+Accuracy:          0.9000
+AUROC:             0.9398
+AUPRC:             0.8991
+F1-score:          0.8889
+Sensitivity:       1.0000
+Specificity:       0.8333
+TP=12, FP=3, TN=15, FN=0
+
+Validation results:
+  loss        : 0.5516
+  accuracy    : 0.9000
+  auroc       : 0.9398
+  auprc       : 0.8991
+  sensitivity : 1.0000
+  specificity : 0.8333
+  f1          : 0.8889
+=====================================================================
+
+[Best Model Update] auroc improved from -inf to 0.9398. Saving checkpoint to experiment_logs/run_20260621_083308/fold_4/best_model.pth
+Train Epoch: 2 [0/147 (0%)]	Loss: 0.636951
+Train Epoch 2 Average loss: 0.5525, Accuracy: 105/147 (71.43%)
+
+=== Validation at epoch 2 (every 1 epochs) ===
+Validation Loss: 0.4611
+Accuracy:          0.8333
+AUROC:             0.9491
+AUPRC:             0.9272
+F1-score:          0.7826
+Sensitivity:       0.7500
+Specificity:       0.8889
+TP=9, FP=2, TN=16, FN=3
+
+Validation results:
+  loss        : 0.4611
+  accuracy    : 0.8333
+  auroc       : 0.9491
+  auprc       : 0.9272
+  sensitivity : 0.7500
+  specificity : 0.8889
+  f1          : 0.7826
+=====================================================================
+
+[Best Model Update] auroc improved from 0.9398 to 0.9491. Saving checkpoint to experiment_logs/run_20260621_083308/fold_4/best_model.pth
+Train Epoch: 3 [0/147 (0%)]	Loss: 0.618370
+Train Epoch 3 Average loss: 0.4447, Accuracy: 122/147 (82.99%)
+
+=== Validation at epoch 3 (every 1 epochs) ===
+Validation Loss: 0.4200
+Accuracy:          0.8667
+AUROC:             0.9815
+AUPRC:             0.9707
+F1-score:          0.8182
+Sensitivity:       0.7500
+Specificity:       0.9444
+TP=9, FP=1, TN=17, FN=3
+
+Validation results:
+  loss        : 0.4200
+  accuracy    : 0.8667
+  auroc       : 0.9815
+  auprc       : 0.9707
+  sensitivity : 0.7500
+  specificity : 0.9444
+  f1          : 0.8182
+=====================================================================
+
+[Best Model Update] auroc improved from 0.9491 to 0.9815. Saving checkpoint to experiment_logs/run_20260621_083308/fold_4/best_model.pth
+Train Epoch: 4 [0/147 (0%)]	Loss: 0.428884
+Train Epoch 4 Average loss: 0.3683, Accuracy: 127/147 (86.39%)
+
+=== Validation at epoch 4 (every 1 epochs) ===
+Validation Loss: 0.3926
+Accuracy:          0.8333
+AUROC:             0.9815
+AUPRC:             0.9707
+F1-score:          0.7619
+Sensitivity:       0.6667
+Specificity:       0.9444
+TP=8, FP=1, TN=17, FN=4
+
+Validation results:
+  loss        : 0.3926
+  accuracy    : 0.8333
+  auroc       : 0.9815
+  auprc       : 0.9707
+  sensitivity : 0.6667
+  specificity : 0.9444
+  f1          : 0.7619
+=====================================================================
+
+[ES] No improvement in auroc: 1/10 (best=0.9815, current=0.9815)
+Train Epoch: 5 [0/147 (0%)]	Loss: 0.363189
+Train Epoch 5 Average loss: 0.3816, Accuracy: 124/147 (84.35%)
+
+=== Validation at epoch 5 (every 1 epochs) ===
+Validation Loss: 0.3825
+Accuracy:          0.8667
+AUROC:             0.9815
+AUPRC:             0.9707
+F1-score:          0.8000
+Sensitivity:       0.6667
+Specificity:       1.0000
+TP=8, FP=0, TN=18, FN=4
+
+Validation results:
+  loss        : 0.3825
+  accuracy    : 0.8667
+  auroc       : 0.9815
+  auprc       : 0.9707
+  sensitivity : 0.6667
+  specificity : 1.0000
+  f1          : 0.8000
+=====================================================================
+
+[ES] No improvement in auroc: 2/10 (best=0.9815, current=0.9815)
+Train Epoch: 6 [0/147 (0%)]	Loss: 0.250073
+Train Epoch 6 Average loss: 0.2768, Accuracy: 136/147 (92.52%)
+
+=== Validation at epoch 6 (every 1 epochs) ===
+Validation Loss: 0.3619
+Accuracy:          0.8333
+AUROC:             0.9815
+AUPRC:             0.9707
+F1-score:          0.7619
+Sensitivity:       0.6667
+Specificity:       0.9444
+TP=8, FP=1, TN=17, FN=4
+
+Validation results:
+  loss        : 0.3619
+  accuracy    : 0.8333
+  auroc       : 0.9815
+  auprc       : 0.9707
+  sensitivity : 0.6667
+  specificity : 0.9444
+  f1          : 0.7619
+=====================================================================
+
+[ES] No improvement in auroc: 3/10 (best=0.9815, current=0.9815)
+Train Epoch: 7 [0/147 (0%)]	Loss: 0.516404
+Train Epoch 7 Average loss: 0.2444, Accuracy: 136/147 (92.52%)
+
+=== Validation at epoch 7 (every 1 epochs) ===
+Validation Loss: 0.3380
+Accuracy:          0.8333
+AUROC:             0.9815
+AUPRC:             0.9707
+F1-score:          0.7619
+Sensitivity:       0.6667
+Specificity:       0.9444
+TP=8, FP=1, TN=17, FN=4
+
+Validation results:
+  loss        : 0.3380
+  accuracy    : 0.8333
+  auroc       : 0.9815
+  auprc       : 0.9707
+  sensitivity : 0.6667
+  specificity : 0.9444
+  f1          : 0.7619
+=====================================================================
+
+[ES] No improvement in auroc: 4/10 (best=0.9815, current=0.9815)
+Train Epoch: 8 [0/147 (0%)]	Loss: 0.187163
+Train Epoch 8 Average loss: 0.2291, Accuracy: 134/147 (91.16%)
+
+=== Validation at epoch 8 (every 1 epochs) ===
+Validation Loss: 0.3407
+Accuracy:          0.8667
+AUROC:             0.9815
+AUPRC:             0.9707
+F1-score:          0.8000
+Sensitivity:       0.6667
+Specificity:       1.0000
+TP=8, FP=0, TN=18, FN=4
+
+Validation results:
+  loss        : 0.3407
+  accuracy    : 0.8667
+  auroc       : 0.9815
+  auprc       : 0.9707
+  sensitivity : 0.6667
+  specificity : 1.0000
+  f1          : 0.8000
+=====================================================================
+
+[ES] No improvement in auroc: 5/10 (best=0.9815, current=0.9815)
+Train Epoch: 9 [0/147 (0%)]	Loss: 0.202101
+Train Epoch 9 Average loss: 0.1828, Accuracy: 138/147 (93.88%)
+
+=== Validation at epoch 9 (every 1 epochs) ===
+Validation Loss: 0.3396
+Accuracy:          0.9333
+AUROC:             0.9537
+AUPRC:             0.9538
+F1-score:          0.9091
+Sensitivity:       0.8333
+Specificity:       1.0000
+TP=10, FP=0, TN=18, FN=2
+
+Validation results:
+  loss        : 0.3396
+  accuracy    : 0.9333
+  auroc       : 0.9537
+  auprc       : 0.9538
+  sensitivity : 0.8333
+  specificity : 1.0000
+  f1          : 0.9091
+=====================================================================
+
+[ES] No improvement in auroc: 6/10 (best=0.9815, current=0.9537)
+Train Epoch: 10 [0/147 (0%)]	Loss: 0.398193
+Train Epoch 10 Average loss: 0.1782, Accuracy: 139/147 (94.56%)
+
+=== Validation at epoch 10 (every 1 epochs) ===
+Validation Loss: 0.3481
+Accuracy:          0.8333
+AUROC:             0.9583
+AUPRC:             0.9544
+F1-score:          0.7368
+Sensitivity:       0.5833
+Specificity:       1.0000
+TP=7, FP=0, TN=18, FN=5
+
+Validation results:
+  loss        : 0.3481
+  accuracy    : 0.8333
+  auroc       : 0.9583
+  auprc       : 0.9544
+  sensitivity : 0.5833
+  specificity : 1.0000
+  f1          : 0.7368
+=====================================================================
+
+[ES] No improvement in auroc: 7/10 (best=0.9815, current=0.9583)
+Train Epoch: 11 [0/147 (0%)]	Loss: 0.161963
+Train Epoch 11 Average loss: 0.1082, Accuracy: 145/147 (98.64%)
+
+=== Validation at epoch 11 (every 1 epochs) ===
+Validation Loss: 0.3168
+Accuracy:          0.9000
+AUROC:             0.9676
+AUPRC:             0.9579
+F1-score:          0.8571
+Sensitivity:       0.7500
+Specificity:       1.0000
+TP=9, FP=0, TN=18, FN=3
+
+Validation results:
+  loss        : 0.3168
+  accuracy    : 0.9000
+  auroc       : 0.9676
+  auprc       : 0.9579
+  sensitivity : 0.7500
+  specificity : 1.0000
+  f1          : 0.8571
+=====================================================================
+
+[ES] No improvement in auroc: 8/10 (best=0.9815, current=0.9676)
+Train Epoch: 12 [0/147 (0%)]	Loss: 0.064063
+Train Epoch 12 Average loss: 0.0857, Accuracy: 146/147 (99.32%)
+
+=== Validation at epoch 12 (every 1 epochs) ===
+Validation Loss: 0.2658
+Accuracy:          0.9333
+AUROC:             0.9907
+AUPRC:             0.9866
+F1-score:          0.9091
+Sensitivity:       0.8333
+Specificity:       1.0000
+TP=10, FP=0, TN=18, FN=2
+
+Validation results:
+  loss        : 0.2658
+  accuracy    : 0.9333
+  auroc       : 0.9907
+  auprc       : 0.9866
+  sensitivity : 0.8333
+  specificity : 1.0000
+  f1          : 0.9091
+=====================================================================
+
+[Best Model Update] auroc improved from 0.9815 to 0.9907. Saving checkpoint to experiment_logs/run_20260621_083308/fold_4/best_model.pth
+Train Epoch: 13 [0/147 (0%)]	Loss: 0.097389
+Train Epoch 13 Average loss: 0.0912, Accuracy: 146/147 (99.32%)
+
+=== Validation at epoch 13 (every 1 epochs) ===
+Validation Loss: 0.2566
+Accuracy:          0.9000
+AUROC:             0.9861
+AUPRC:             0.9791
+F1-score:          0.8696
+Sensitivity:       0.8333
+Specificity:       0.9444
+TP=10, FP=1, TN=17, FN=2
+
+Validation results:
+  loss        : 0.2566
+  accuracy    : 0.9000
+  auroc       : 0.9861
+  auprc       : 0.9791
+  sensitivity : 0.8333
+  specificity : 0.9444
+  f1          : 0.8696
+=====================================================================
+
+[ES] No improvement in auroc: 1/10 (best=0.9907, current=0.9861)
+Train Epoch: 14 [0/147 (0%)]	Loss: 0.165745
+Train Epoch 14 Average loss: 0.0976, Accuracy: 145/147 (98.64%)
+
+=== Validation at epoch 14 (every 1 epochs) ===
+Validation Loss: 0.2483
+Accuracy:          0.9000
+AUROC:             0.9861
+AUPRC:             0.9791
+F1-score:          0.8696
+Sensitivity:       0.8333
+Specificity:       0.9444
+TP=10, FP=1, TN=17, FN=2
+
+Validation results:
+  loss        : 0.2483
+  accuracy    : 0.9000
+  auroc       : 0.9861
+  auprc       : 0.9791
+  sensitivity : 0.8333
+  specificity : 0.9444
+  f1          : 0.8696
+=====================================================================
+
+[ES] No improvement in auroc: 2/10 (best=0.9907, current=0.9861)
+Train Epoch: 15 [0/147 (0%)]	Loss: 0.019293
+Train Epoch 15 Average loss: 0.0825, Accuracy: 147/147 (100.00%)
+
+=== Validation at epoch 15 (every 1 epochs) ===
+Validation Loss: 0.2475
+Accuracy:          0.9000
+AUROC:             0.9907
+AUPRC:             0.9866
+F1-score:          0.8696
+Sensitivity:       0.8333
+Specificity:       0.9444
+TP=10, FP=1, TN=17, FN=2
+
+Validation results:
+  loss        : 0.2475
+  accuracy    : 0.9000
+  auroc       : 0.9907
+  auprc       : 0.9866
+  sensitivity : 0.8333
+  specificity : 0.9444
+  f1          : 0.8696
+=====================================================================
+
+[ES] No improvement in auroc: 3/10 (best=0.9907, current=0.9907)
+Train Epoch: 16 [0/147 (0%)]	Loss: 0.051657
+Train Epoch 16 Average loss: 0.0846, Accuracy: 146/147 (99.32%)
+
+=== Validation at epoch 16 (every 1 epochs) ===
+Validation Loss: 0.2531
+Accuracy:          0.9000
+AUROC:             0.9861
+AUPRC:             0.9812
+F1-score:          0.8696
+Sensitivity:       0.8333
+Specificity:       0.9444
+TP=10, FP=1, TN=17, FN=2
+
+Validation results:
+  loss        : 0.2531
+  accuracy    : 0.9000
+  auroc       : 0.9861
+  auprc       : 0.9812
+  sensitivity : 0.8333
+  specificity : 0.9444
+  f1          : 0.8696
+=====================================================================
+
+[ES] No improvement in auroc: 4/10 (best=0.9907, current=0.9861)
+Train Epoch: 17 [0/147 (0%)]	Loss: 0.033060
+Train Epoch 17 Average loss: 0.0303, Accuracy: 147/147 (100.00%)
+
+=== Validation at epoch 17 (every 1 epochs) ===
+Validation Loss: 0.3259
+Accuracy:          0.8667
+AUROC:             0.9398
+AUPRC:             0.9376
+F1-score:          0.8182
+Sensitivity:       0.7500
+Specificity:       0.9444
+TP=9, FP=1, TN=17, FN=3
+
+Validation results:
+  loss        : 0.3259
+  accuracy    : 0.8667
+  auroc       : 0.9398
+  auprc       : 0.9376
+  sensitivity : 0.7500
+  specificity : 0.9444
+  f1          : 0.8182
+=====================================================================
+
+[ES] No improvement in auroc: 5/10 (best=0.9907, current=0.9398)
+Train Epoch: 18 [0/147 (0%)]	Loss: 0.017844
+Train Epoch 18 Average loss: 0.0771, Accuracy: 144/147 (97.96%)
+
+=== Validation at epoch 18 (every 1 epochs) ===
+Validation Loss: 0.2858
+Accuracy:          0.8667
+AUROC:             0.9583
+AUPRC:             0.9518
+F1-score:          0.8182
+Sensitivity:       0.7500
+Specificity:       0.9444
+TP=9, FP=1, TN=17, FN=3
+
+Validation results:
+  loss        : 0.2858
+  accuracy    : 0.8667
+  auroc       : 0.9583
+  auprc       : 0.9518
+  sensitivity : 0.7500
+  specificity : 0.9444
+  f1          : 0.8182
+=====================================================================
+
+[ES] No improvement in auroc: 6/10 (best=0.9907, current=0.9583)
+Train Epoch: 19 [0/147 (0%)]	Loss: 0.027882
+Train Epoch 19 Average loss: 0.0454, Accuracy: 147/147 (100.00%)
+
+=== Validation at epoch 19 (every 1 epochs) ===
+Validation Loss: 0.3160
+Accuracy:          0.8333
+AUROC:             0.9769
+AUPRC:             0.9652
+F1-score:          0.7368
+Sensitivity:       0.5833
+Specificity:       1.0000
+TP=7, FP=0, TN=18, FN=5
+
+Validation results:
+  loss        : 0.3160
+  accuracy    : 0.8333
+  auroc       : 0.9769
+  auprc       : 0.9652
+  sensitivity : 0.5833
+  specificity : 1.0000
+  f1          : 0.7368
+=====================================================================
+
+[ES] No improvement in auroc: 7/10 (best=0.9907, current=0.9769)
+Train Epoch: 20 [0/147 (0%)]	Loss: 0.045697
+Train Epoch 20 Average loss: 0.0653, Accuracy: 145/147 (98.64%)
+
+=== Validation at epoch 20 (every 1 epochs) ===
+Validation Loss: 0.2521
+Accuracy:          0.9000
+AUROC:             0.9861
+AUPRC:             0.9812
+F1-score:          0.8696
+Sensitivity:       0.8333
+Specificity:       0.9444
+TP=10, FP=1, TN=17, FN=2
+
+Validation results:
+  loss        : 0.2521
+  accuracy    : 0.9000
+  auroc       : 0.9861
+  auprc       : 0.9812
+  sensitivity : 0.8333
+  specificity : 0.9444
+  f1          : 0.8696
+=====================================================================
+
+[ES] No improvement in auroc: 8/10 (best=0.9907, current=0.9861)
+Train Epoch: 21 [0/147 (0%)]	Loss: 0.010577
+Train Epoch 21 Average loss: 0.0325, Accuracy: 147/147 (100.00%)
+
+=== Validation at epoch 21 (every 1 epochs) ===
+Validation Loss: 0.2681
+Accuracy:          0.9000
+AUROC:             0.9444
+AUPRC:             0.9493
+F1-score:          0.8696
+Sensitivity:       0.8333
+Specificity:       0.9444
+TP=10, FP=1, TN=17, FN=2
+
+Validation results:
+  loss        : 0.2681
+  accuracy    : 0.9000
+  auroc       : 0.9444
+  auprc       : 0.9493
+  sensitivity : 0.8333
+  specificity : 0.9444
+  f1          : 0.8696
+=====================================================================
+
+[ES] No improvement in auroc: 9/10 (best=0.9907, current=0.9444)
+Train Epoch: 22 [0/147 (0%)]	Loss: 0.071404
+Train Epoch 22 Average loss: 0.0469, Accuracy: 146/147 (99.32%)
+
+=== Validation at epoch 22 (every 1 epochs) ===
+Validation Loss: 0.2568
+Accuracy:          0.9333
+AUROC:             0.9630
+AUPRC:             0.9624
+F1-score:          0.9091
+Sensitivity:       0.8333
+Specificity:       1.0000
+TP=10, FP=0, TN=18, FN=2
+
+Validation results:
+  loss        : 0.2568
+  accuracy    : 0.9333
+  auroc       : 0.9630
+  auprc       : 0.9624
+  sensitivity : 0.8333
+  specificity : 1.0000
+  f1          : 0.9091
+=====================================================================
+
+[ES] No improvement in auroc: 10/10 (best=0.9907, current=0.9630)
+
+[Early stopping triggered at epoch 22] Validation auroc has not improved for 10 periods.
+
+Early stopping triggered — breaking training loop.
+
+Loading best model from experiment_logs/run_20260621_083308/fold_4/best_model.pth for final evaluation...
+Using validation threshold 0.5000
+Using validation threshold 0.5000
+Validation Loss: 0.6203
+Accuracy:          0.7556
+AUROC:             0.8160
+AUPRC:             0.7294
+F1-score:          0.7317
+Sensitivity:       0.7500
+Specificity:       0.7600
+TP=15, FP=6, TN=19, FN=5
+
+Fold 4 Results:
+Accuracy    : 0.7556
+AUROC       : 0.8160
+AUPRC       : 0.7294
+
+=== FINAL METRICS (Best AUROC Model) ===
+  loss        : 0.6203
+  accuracy    : 0.7556
+  auroc       : 0.8160
+  auprc       : 0.7294
+  sensitivity : 0.7500
+  specificity : 0.7600
+  f1          : 0.7317
+=====================================================
+
+
+============================================================
+TRAINING FOLD 5
+============================================================
+
+=== TRAINABLE PARAMETERS ===
+conv1.weight                                       False
+bn1.weight                                         False
+bn1.bias                                           False
+layer1.0.conv1.weight                              False
+layer1.0.bn1.weight                                False
+layer1.0.bn1.bias                                  False
+layer1.0.conv2.weight                              False
+layer1.0.bn2.weight                                False
+layer1.0.bn2.bias                                  False
+layer1.1.conv1.weight                              False
+layer1.1.bn1.weight                                False
+layer1.1.bn1.bias                                  False
+layer1.1.conv2.weight                              False
+layer1.1.bn2.weight                                False
+layer1.1.bn2.bias                                  False
+layer2.0.conv1.weight                              False
+layer2.0.bn1.weight                                False
+layer2.0.bn1.bias                                  False
+layer2.0.conv2.weight                              False
+layer2.0.bn2.weight                                False
+layer2.0.bn2.bias                                  False
+layer2.0.downsample.0.weight                       False
+layer2.0.downsample.1.weight                       False
+layer2.0.downsample.1.bias                         False
+layer2.1.conv1.weight                              False
+layer2.1.bn1.weight                                False
+layer2.1.bn1.bias                                  False
+layer2.1.conv2.weight                              False
+layer2.1.bn2.weight                                False
+layer2.1.bn2.bias                                  False
+layer3.0.conv1.weight                              False
+layer3.0.bn1.weight                                False
+layer3.0.bn1.bias                                  False
+layer3.0.conv2.weight                              False
+layer3.0.bn2.weight                                False
+layer3.0.bn2.bias                                  False
+layer3.0.downsample.0.weight                       False
+layer3.0.downsample.1.weight                       False
+layer3.0.downsample.1.bias                         False
+layer3.1.conv1.weight                              False
+layer3.1.bn1.weight                                False
+layer3.1.bn1.bias                                  False
+layer3.1.conv2.weight                              False
+layer3.1.bn2.weight                                False
+layer3.1.bn2.bias                                  False
+layer4.0.conv1.weight                              True
+layer4.0.bn1.weight                                True
+layer4.0.bn1.bias                                  True
+layer4.0.conv2.weight                              True
+layer4.0.bn2.weight                                True
+layer4.0.bn2.bias                                  True
+layer4.0.downsample.0.weight                       True
+layer4.0.downsample.1.weight                       True
+layer4.0.downsample.1.bias                         True
+layer4.1.conv1.weight                              True
+layer4.1.bn1.weight                                True
+layer4.1.bn1.bias                                  True
+layer4.1.conv2.weight                              True
+layer4.1.bn2.weight                                True
+layer4.1.bn2.bias                                  True
+fc.1.weight                                        True
+fc.1.bias                                          True
+Trainable params: 8,394,754
+Total params: 11,171,266
+Percent trainable: 75.15%
+Class weights: tensor([0.8466, 1.2213], device='cuda:0')
+Trainable params: 8,394,754 / 11,171,266
+
+Fold 5: 149 train, 28 val, 45 test images
+Train Epoch: 1 [0/149 (0%)]	Loss: 0.541809
+Train Epoch 1 Average loss: 0.6986, Accuracy: 96/149 (64.43%)
+
+=== Validation at epoch 1 (every 1 epochs) ===
+Validation Loss: 0.5765
+Accuracy:          0.6429
+AUROC:             0.9219
+AUPRC:             0.9241
+F1-score:          0.2857
+Sensitivity:       0.1667
+Specificity:       1.0000
+TP=2, FP=0, TN=16, FN=10
+
+Validation results:
+  loss        : 0.5765
+  accuracy    : 0.6429
+  auroc       : 0.9219
+  auprc       : 0.9241
+  sensitivity : 0.1667
+  specificity : 1.0000
+  f1          : 0.2857
+=====================================================================
+
+[Best Model Update] auroc improved from -inf to 0.9219. Saving checkpoint to experiment_logs/run_20260621_083308/fold_5/best_model.pth
+Train Epoch: 2 [0/149 (0%)]	Loss: 0.386208
+Train Epoch 2 Average loss: 0.5541, Accuracy: 108/149 (72.48%)
+
+=== Validation at epoch 2 (every 1 epochs) ===
+Validation Loss: 0.4641
+Accuracy:          0.8571
+AUROC:             0.9740
+AUPRC:             0.9722
+F1-score:          0.8000
+Sensitivity:       0.6667
+Specificity:       1.0000
+TP=8, FP=0, TN=16, FN=4
+
+Validation results:
+  loss        : 0.4641
+  accuracy    : 0.8571
+  auroc       : 0.9740
+  auprc       : 0.9722
+  sensitivity : 0.6667
+  specificity : 1.0000
+  f1          : 0.8000
+=====================================================================
+
+[Best Model Update] auroc improved from 0.9219 to 0.9740. Saving checkpoint to experiment_logs/run_20260621_083308/fold_5/best_model.pth
+Train Epoch: 3 [0/149 (0%)]	Loss: 0.815214
+Train Epoch 3 Average loss: 0.5041, Accuracy: 113/149 (75.84%)
+
+=== Validation at epoch 3 (every 1 epochs) ===
+Validation Loss: 0.4544
+Accuracy:          0.8929
+AUROC:             0.9635
+AUPRC:             0.9579
+F1-score:          0.8696
+Sensitivity:       0.8333
+Specificity:       0.9375
+TP=10, FP=1, TN=15, FN=2
+
+Validation results:
+  loss        : 0.4544
+  accuracy    : 0.8929
+  auroc       : 0.9635
+  auprc       : 0.9579
+  sensitivity : 0.8333
+  specificity : 0.9375
+  f1          : 0.8696
+=====================================================================
+
+[ES] No improvement in auroc: 1/10 (best=0.9740, current=0.9635)
+Train Epoch: 4 [0/149 (0%)]	Loss: 0.355655
+Train Epoch 4 Average loss: 0.3599, Accuracy: 123/149 (82.55%)
+
+=== Validation at epoch 4 (every 1 epochs) ===
+Validation Loss: 0.4818
+Accuracy:          0.7500
+AUROC:             0.9115
+AUPRC:             0.9107
+F1-score:          0.7200
+Sensitivity:       0.7500
+Specificity:       0.7500
+TP=9, FP=4, TN=12, FN=3
+
+Validation results:
+  loss        : 0.4818
+  accuracy    : 0.7500
+  auroc       : 0.9115
+  auprc       : 0.9107
+  sensitivity : 0.7500
+  specificity : 0.7500
+  f1          : 0.7200
+=====================================================================
+
+[ES] No improvement in auroc: 2/10 (best=0.9740, current=0.9115)
+Train Epoch: 5 [0/149 (0%)]	Loss: 0.343783
+Train Epoch 5 Average loss: 0.2899, Accuracy: 133/149 (89.26%)
+
+=== Validation at epoch 5 (every 1 epochs) ===
+Validation Loss: 0.4934
+Accuracy:          0.7857
+AUROC:             0.8854
+AUPRC:             0.8976
+F1-score:          0.7692
+Sensitivity:       0.8333
+Specificity:       0.7500
+TP=10, FP=4, TN=12, FN=2
+
+Validation results:
+  loss        : 0.4934
+  accuracy    : 0.7857
+  auroc       : 0.8854
+  auprc       : 0.8976
+  sensitivity : 0.8333
+  specificity : 0.7500
+  f1          : 0.7692
+=====================================================================
+
+[ES] No improvement in auroc: 3/10 (best=0.9740, current=0.8854)
+Train Epoch: 6 [0/149 (0%)]	Loss: 0.268595
+Train Epoch 6 Average loss: 0.2436, Accuracy: 140/149 (93.96%)
+
+=== Validation at epoch 6 (every 1 epochs) ===
+Validation Loss: 0.5168
+Accuracy:          0.6786
+AUROC:             0.8750
+AUPRC:             0.8942
+F1-score:          0.6897
+Sensitivity:       0.8333
+Specificity:       0.5625
+TP=10, FP=7, TN=9, FN=2
+
+Validation results:
+  loss        : 0.5168
+  accuracy    : 0.6786
+  auroc       : 0.8750
+  auprc       : 0.8942
+  sensitivity : 0.8333
+  specificity : 0.5625
+  f1          : 0.6897
+=====================================================================
+
+[ES] No improvement in auroc: 4/10 (best=0.9740, current=0.8750)
+Train Epoch: 7 [0/149 (0%)]	Loss: 0.106460
+Train Epoch 7 Average loss: 0.1782, Accuracy: 140/149 (93.96%)
+
+=== Validation at epoch 7 (every 1 epochs) ===
+Validation Loss: 0.4901
+Accuracy:          0.6786
+AUROC:             0.8802
+AUPRC:             0.8895
+F1-score:          0.6897
+Sensitivity:       0.8333
+Specificity:       0.5625
+TP=10, FP=7, TN=9, FN=2
+
+Validation results:
+  loss        : 0.4901
+  accuracy    : 0.6786
+  auroc       : 0.8802
+  auprc       : 0.8895
+  sensitivity : 0.8333
+  specificity : 0.5625
+  f1          : 0.6897
+=====================================================================
+
+[ES] No improvement in auroc: 5/10 (best=0.9740, current=0.8802)
+Train Epoch: 8 [0/149 (0%)]	Loss: 0.170264
+Train Epoch 8 Average loss: 0.1862, Accuracy: 142/149 (95.30%)
+
+=== Validation at epoch 8 (every 1 epochs) ===
+Validation Loss: 0.4316
+Accuracy:          0.8214
+AUROC:             0.9010
+AUPRC:             0.9164
+F1-score:          0.8000
+Sensitivity:       0.8333
+Specificity:       0.8125
+TP=10, FP=3, TN=13, FN=2
+
+Validation results:
+  loss        : 0.4316
+  accuracy    : 0.8214
+  auroc       : 0.9010
+  auprc       : 0.9164
+  sensitivity : 0.8333
+  specificity : 0.8125
+  f1          : 0.8000
+=====================================================================
+
+[ES] No improvement in auroc: 6/10 (best=0.9740, current=0.9010)
+Train Epoch: 9 [0/149 (0%)]	Loss: 0.173816
+Train Epoch 9 Average loss: 0.1379, Accuracy: 143/149 (95.97%)
+
+=== Validation at epoch 9 (every 1 epochs) ===
+Validation Loss: 0.4093
+Accuracy:          0.8214
+AUROC:             0.9167
+AUPRC:             0.9089
+F1-score:          0.8148
+Sensitivity:       0.9167
+Specificity:       0.7500
+TP=11, FP=4, TN=12, FN=1
+
+Validation results:
+  loss        : 0.4093
+  accuracy    : 0.8214
+  auroc       : 0.9167
+  auprc       : 0.9089
+  sensitivity : 0.9167
+  specificity : 0.7500
+  f1          : 0.8148
+=====================================================================
+
+[ES] No improvement in auroc: 7/10 (best=0.9740, current=0.9167)
+Train Epoch: 10 [0/149 (0%)]	Loss: 0.177550
+Train Epoch 10 Average loss: 0.1568, Accuracy: 141/149 (94.63%)
+
+=== Validation at epoch 10 (every 1 epochs) ===
+Validation Loss: 0.4592
+Accuracy:          0.7500
+AUROC:             0.9167
+AUPRC:             0.9052
+F1-score:          0.7586
+Sensitivity:       0.9167
+Specificity:       0.6250
+TP=11, FP=6, TN=10, FN=1
+
+Validation results:
+  loss        : 0.4592
+  accuracy    : 0.7500
+  auroc       : 0.9167
+  auprc       : 0.9052
+  sensitivity : 0.9167
+  specificity : 0.6250
+  f1          : 0.7586
+=====================================================================
+
+[ES] No improvement in auroc: 8/10 (best=0.9740, current=0.9167)
+Train Epoch: 11 [0/149 (0%)]	Loss: 0.097551
+Train Epoch 11 Average loss: 0.0742, Accuracy: 149/149 (100.00%)
+
+=== Validation at epoch 11 (every 1 epochs) ===
+Validation Loss: 0.4305
+Accuracy:          0.7857
+AUROC:             0.9219
+AUPRC:             0.9040
+F1-score:          0.7857
+Sensitivity:       0.9167
+Specificity:       0.6875
+TP=11, FP=5, TN=11, FN=1
+
+Validation results:
+  loss        : 0.4305
+  accuracy    : 0.7857
+  auroc       : 0.9219
+  auprc       : 0.9040
+  sensitivity : 0.9167
+  specificity : 0.6875
+  f1          : 0.7857
+=====================================================================
+
+[ES] No improvement in auroc: 9/10 (best=0.9740, current=0.9219)
+Train Epoch: 12 [0/149 (0%)]	Loss: 0.037831
+Train Epoch 12 Average loss: 0.0795, Accuracy: 147/149 (98.66%)
+
+=== Validation at epoch 12 (every 1 epochs) ===
+Validation Loss: 0.3876
+Accuracy:          0.8214
+AUROC:             0.9271
+AUPRC:             0.9183
+F1-score:          0.8148
+Sensitivity:       0.9167
+Specificity:       0.7500
+TP=11, FP=4, TN=12, FN=1
+
+Validation results:
+  loss        : 0.3876
+  accuracy    : 0.8214
+  auroc       : 0.9271
+  auprc       : 0.9183
+  sensitivity : 0.9167
+  specificity : 0.7500
+  f1          : 0.8148
+=====================================================================
+
+[ES] No improvement in auroc: 10/10 (best=0.9740, current=0.9271)
+
+[Early stopping triggered at epoch 12] Validation auroc has not improved for 10 periods.
+
+Early stopping triggered — breaking training loop.
+
+Loading best model from experiment_logs/run_20260621_083308/fold_5/best_model.pth for final evaluation...
+Using validation threshold 0.5000
+Using validation threshold 0.5000
+Validation Loss: 0.5609
+Accuracy:          0.7556
+AUROC:             0.8086
+AUPRC:             0.8052
+F1-score:          0.5926
+Sensitivity:       0.4444
+Specificity:       0.9630
+TP=8, FP=1, TN=26, FN=10
+
+Fold 5 Results:
+Accuracy    : 0.7556
+AUROC       : 0.8086
+AUPRC       : 0.8052
+
+=== FINAL METRICS (Best AUROC Model) ===
+  loss        : 0.5609
+  accuracy    : 0.7556
+  auroc       : 0.8086
+  auprc       : 0.8052
+  sensitivity : 0.4444
+  specificity : 0.9630
+  f1          : 0.5926
+=====================================================
+
+
+Creating pooled CV ROC/PR curves...
+targets: (222,)
+probs: (222, 2)
+
+=== POOLED CV METRICS ===
+accuracy: 0.7297297297297297
+sensitivity: 0.5604395604395604
+specificity: 0.8473282442748091
+f1: 0.6296296296296297
+auroc: 0.774431675195034
+auprc: 0.7149991506925917
+tp: 51
+tn: 111
+fp: 20
+fn: 40
+=========================
+
+
+
+============================================================
+5-FOLD CROSS VALIDATION RESULTS
+============================================================
+accuracy: 0.7305 ± 0.0408
+auroc: 0.7799 ± 0.0735
+auprc: 0.7601 ± 0.0785
+sensitivity: 0.5596 ± 0.2151
+specificity: 0.8445 ± 0.1015
+f1: 0.6095 ± 0.1394

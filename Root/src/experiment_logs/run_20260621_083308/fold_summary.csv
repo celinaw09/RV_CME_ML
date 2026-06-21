@@ -1,0 +1,6 @@
+fold,train_images,val_images,test_images,train_patients,val_patients,test_patients
+1,147,28,47,89,16,27
+2,151,27,44,89,16,27
+3,153,28,41,90,16,26
+4,147,30,45,90,16,26
+5,149,28,45,90,16,26
