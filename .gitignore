@@ -1,14 +1,32 @@
 # Python
 __pycache__/
-*.pyc
+*.py[cod]
 .ipynb_checkpoints/
 
-# Data / outputs
-data/
-plots/
-*.npy
-*.csv
+# Environments
+venv/
+.venv/
+env/
 
-# OS/editor
-.DS_Store
+# Models
+checkpoint_dir/
+*.pth
+*.pt
+*.ckpt
+
+# Generated outputs
+experiment_logs/
+plots/
+xai_plots/
+
+# Large arrays
+*.npy
+*.npz
+
+# IDE
 .vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

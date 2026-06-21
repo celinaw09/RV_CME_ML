@@ -11,12 +11,28 @@ from sklearn.metrics import (
 
 from sklearn.metrics import roc_curve, auc
 import matplotlib.pyplot as plt
+import numpy as np
+
+def find_best_threshold(y_true, y_prob):
+
+    fpr, tpr, thresholds = roc_curve(
+        y_true,
+        y_prob
+    )
+
+    j_scores = tpr - fpr
+
+    best_idx = np.argmax(j_scores)
+
+    return thresholds[best_idx]
+
 
 def train(
     model,
     device,
     train_loader,
     optimizer,
+    criterion,
     epoch,
     log_interval=10,
     val_loader=None,
@@ -73,7 +89,7 @@ def train(
 
         optimizer.zero_grad()
         output = model(data)
-        loss = F.cross_entropy(output, target)
+        loss = criterion(output, target)
         loss.backward()
         optimizer.step()
 
@@ -109,7 +125,14 @@ def train(
 
     if should_validate:
         print(f"\n=== Validation at epoch {epoch} (every {validate_every_epochs} epochs) ===")
-        val_metrics = validate(model, device, val_loader, threshold=val_threshold)
+        val_metrics = validate(
+            model,
+            device,
+            criterion,
+            val_loader,
+            threshold=0.5,
+            optimize_threshold=False
+        )
 
         # Pretty-print validation metrics, including accuracy:
         print("Validation results:")
@@ -130,7 +153,15 @@ def train(
                     f"Saving checkpoint to {checkpoint_path}"
                 )
                 model._best_val_metric = current_val_metric
-                torch.save(model.state_dict(), checkpoint_path)
+                torch.save(
+                    {
+                        "model_state_dict": model.state_dict(),
+                        "threshold": float(val_metrics["threshold"]),
+                        "best_metric": float(current_val_metric),
+                        "epoch": int(epoch),
+                    },
+                    checkpoint_path
+                )
 
         # ---- Early stopping based on VALIDATION monitor_metric (maximize) ----
         if early_stopping_on_loss and current_val_metric is not None:
@@ -155,7 +186,7 @@ def train(
 
     return avg_loss, accuracy
 
-def validate(model, device, val_loader, threshold=0.5):
+def validate(model, device,criterion, val_loader, threshold=0.5,optimize_threshold=False):
     model.eval()
     val_loss = 0.0
     all_targets = []
@@ -167,7 +198,7 @@ def validate(model, device, val_loader, threshold=0.5):
             data, target = data.to(device), target.to(device)
 
             output = model(data)
-            loss = F.cross_entropy(output, target)
+            loss = criterion(output, target)
             val_loss += loss.item() * data.size(0)
 
             # --- Predictions ---
@@ -212,8 +243,22 @@ def validate(model, device, val_loader, threshold=0.5):
     # -------------------------------
     #       BINARY CLASSIFICATION
     # -------------------------------
-    pos_probs = all_probs[:, 1]     # probability of positive class
-    preds_thresh = (pos_probs >= threshold).astype(int)
+    pos_probs = all_probs[:, 1]
+
+    if optimize_threshold:
+        threshold = find_best_threshold(
+            all_targets,
+            pos_probs
+        )
+
+        print(
+            f"Best threshold from validation: "
+            f"{threshold:.4f}"
+        )
+
+    preds_thresh = (
+        pos_probs >= threshold
+    ).astype(int)
 
     # Accuracy
     acc = accuracy_score(all_targets, preds_thresh)
@@ -232,7 +277,13 @@ def validate(model, device, val_loader, threshold=0.5):
     f1 = f1_score(all_targets, preds_thresh)
 
     # Confusion matrix → TN, FP, FN, TP
-    tn, fp, fn, tp = confusion_matrix(all_targets, preds_thresh).ravel()
+    cm = confusion_matrix(
+        all_targets,
+        preds_thresh,
+        labels=[0,1]
+    )
+
+    tn, fp, fn, tp = cm.ravel()
 
     sensitivity = tp / (tp + fn + 1e-8)
     specificity = tn / (tn + fp + 1e-8)
@@ -249,18 +300,19 @@ def validate(model, device, val_loader, threshold=0.5):
     print(f"TP={tp}, FP={fp}, TN={tn}, FN={fn}\n")
 
     return {
-        "loss": avg_loss,
-        "accuracy": acc,
-        "auroc": auroc,
-        "auprc": auprc,
-        "f1": f1,
-        "sensitivity": sensitivity,
-        "specificity": specificity,
-        "tp": tp,
-        "fp": fp,
-        "tn": tn,
-        "fn": fn,
-    }
+    "loss": avg_loss,
+    "accuracy": acc,
+    "auroc": auroc,
+    "auprc": auprc,
+    "f1": f1,
+    "sensitivity": sensitivity,
+    "specificity": specificity,
+    "threshold": threshold,   # NEW
+    "tp": tp,
+    "fp": fp,
+    "tn": tn,
+    "fn": fn,
+}
 
 
 def get_probs_and_targets(model, device, loader):
@@ -307,3 +359,50 @@ def plot_roc_curve(model, device, loader, save_path="roc_curve.png"):
 
     print(f"Saved ROC curve to: {save_path}  (AUC = {roc_auc:.3f})")
     return roc_auc
+
+
+
+def plot_roc_curve(targets, probs, save_path):
+
+    from sklearn.metrics import roc_curve, roc_auc_score
+
+    fpr, tpr, _ = roc_curve(targets, probs)
+
+    auc = roc_auc_score(targets, probs)
+
+    fig, ax = plt.subplots(figsize=(6,5))
+
+    ax.plot(
+        fpr,
+        tpr,
+        linewidth=2,
+        label=f"AUC = {auc:.3f}"
+    )
+
+    ax.plot(
+        [0,1],
+        [0,1],
+        linestyle="--"
+    )
+
+    ax.set_xlabel("False Positive Rate")
+    ax.set_ylabel("True Positive Rate")
+    ax.set_title("ROC Curve")
+
+    ax.legend()
+
+    ax.grid(True, alpha=0.3)
+
+    fig.tight_layout()
+
+    fig.savefig(
+        save_path,
+        format="pdf",
+        bbox_inches="tight",
+        pad_inches=0.02,
+        dpi=300
+    )
+
+    plt.close(fig)
+
+    return auc

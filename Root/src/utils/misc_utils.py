@@ -15,60 +15,765 @@ from collections import Counter
 import torchvision.models as models
 import numpy as np
 import pandas as pd
-from sklearn.metrics import (
-    roc_auc_score,
-    average_precision_score,
-    precision_recall_curve,
-    confusion_matrix,
-    ConfusionMatrixDisplay,
-    f1_score,
-    accuracy_score,
-)
-
 import os
 import re
 
+from sklearn.metrics import (
+    roc_curve,
+    auc,
+    precision_recall_curve,
+    average_precision_score,
+    confusion_matrix,
+    accuracy_score,
+    recall_score,
+    f1_score
+)
+from sklearn.model_selection import (
+    StratifiedKFold,
+    train_test_split
+)
+from PIL import Image
 
-from sklearn.model_selection import train_test_split
 
-def stratified_patient_split(df, patient_col="patient_id", label_col="label",
-                             train_size=0.8, val_size=0.1, test_size=0.1,
-                             random_state=42):
-    assert abs(train_size + val_size + test_size - 1.0) < 1e-9
+def evaluate_cross_validation_results(
+    all_fold_targets,
+    all_fold_probs,
+    run_dir,
+    threshold=0.5
+):
+    """
+    all_fold_targets : list of arrays
+    all_fold_probs   : list of arrays (N,2)
+    run_dir          : output directory
+    """
 
-    # ---- patient-level table ----
-    patient_df = (
-        df.groupby(patient_col)[label_col]
-          .max()  # patient is positive if ANY eye is positive
-          .reset_index()
-          .rename(columns={label_col: "patient_label"})
+    # =====================================
+    # CONCATENATE ALL FOLDS
+    # =====================================
+
+    targets = np.concatenate(
+        all_fold_targets
     )
 
-    # ---- split patients: train vs temp ----
+    probs = np.concatenate(
+        all_fold_probs
+    )
+
+    print("targets:", targets.shape)
+    print("probs:", probs.shape)
+
+    probs_pos = probs[:, 1]
+
+    if targets.ndim == 2:
+        targets = np.argmax(
+            targets,
+            axis=1
+        )
+
+    # =====================================
+    # ROC CURVE
+    # =====================================
+
+    fpr, tpr, _ = roc_curve(
+        targets,
+        probs_pos
+    )
+
+    roc_auc = auc(
+        fpr,
+        tpr
+    )
+
+    plt.figure(figsize=(6, 6))
+
+    plt.plot(
+        fpr,
+        tpr,
+        lw=2,
+        label=f"AUC = {roc_auc:.3f}"
+    )
+
+    plt.plot(
+        [0, 1],
+        [0, 1],
+        "--"
+    )
+
+    plt.xlabel(
+        "False Positive Rate"
+    )
+
+    plt.ylabel(
+        "True Positive Rate"
+    )
+
+    plt.title(
+        "5-Fold Cross-Validated ROC"
+    )
+
+    plt.legend()
+
+    plt.savefig(
+        os.path.join(
+            run_dir,
+            "cv_roc_curve.pdf"
+        ),
+        bbox_inches="tight"
+    )
+
+    plt.close()
+
+    # =====================================
+    # PR CURVE
+    # =====================================
+
+    precision, recall, _ = precision_recall_curve(
+        targets,
+        probs_pos
+    )
+
+    ap = average_precision_score(
+        targets,
+        probs_pos
+    )
+
+    plt.figure(figsize=(6, 6))
+
+    plt.plot(
+        recall,
+        precision,
+        lw=2,
+        label=f"AP = {ap:.3f}"
+    )
+
+    plt.xlabel("Recall")
+    plt.ylabel("Precision")
+
+    plt.title(
+        "5-Fold Cross-Validated PR Curve"
+    )
+
+    plt.legend()
+
+    plt.savefig(
+        os.path.join(
+            run_dir,
+            "cv_pr_curve.pdf"
+        ),
+        bbox_inches="tight"
+    )
+
+    plt.close()
+
+    # =====================================
+    # CONFUSION MATRIX
+    # =====================================
+
+    preds = (
+        probs_pos >= threshold
+    ).astype(int)
+
+    cm = confusion_matrix(
+        targets,
+        preds
+    )
+
+    tn, fp, fn, tp = cm.ravel()
+
+    fig, ax = plt.subplots(
+        figsize=(7, 6)
+    )
+
+    im = ax.imshow(
+        cm,
+        cmap=plt.cm.Blues
+    )
+
+    plt.colorbar(
+        im,
+        ax=ax
+    )
+
+    classes = [
+        "non-CME",
+        "CME"
+    ]
+
+    ax.set(
+        xticks=np.arange(2),
+        yticks=np.arange(2),
+        xticklabels=classes,
+        yticklabels=classes,
+        xlabel="Predicted label",
+        ylabel="True label",
+        title=f"Confusion Matrix (threshold = {threshold})"
+    )
+
+    thresh = cm.max() / 2
+
+    for i in range(cm.shape[0]):
+        for j in range(cm.shape[1]):
+
+            ax.text(
+                j,
+                i,
+                str(cm[i, j]),
+                ha="center",
+                va="center",
+                fontsize=18,
+                fontweight="bold",
+                color=(
+                    "white"
+                    if cm[i, j] > thresh
+                    else "black"
+                )
+            )
+
+    fig.tight_layout()
+
+    png_path = os.path.join(
+        run_dir,
+        "cv_confusion_matrix.png"
+    )
+
+    pdf_path = os.path.join(
+        run_dir,
+        "cv_confusion_matrix.pdf"
+    )
+
+    plt.savefig(
+        png_path,
+        dpi=600,
+        bbox_inches="tight"
+    )
+
+    plt.close()
+
+    img = Image.open(
+        png_path
+    ).convert("RGB")
+
+    img.save(
+        pdf_path,
+        "PDF",
+        resolution=600
+    )
+
+    # =====================================
+    # POOLED METRICS
+    # =====================================
+
+    pooled_metrics = {
+
+        "accuracy":
+            accuracy_score(
+                targets,
+                preds
+            ),
+
+        "sensitivity":
+            recall_score(
+                targets,
+                preds
+            ),
+
+        "specificity":
+            tn / (tn + fp),
+
+        "f1":
+            f1_score(
+                targets,
+                preds
+            ),
+
+        "auroc":
+            roc_auc,
+
+        "auprc":
+            ap,
+
+        "tp":
+            int(tp),
+
+        "tn":
+            int(tn),
+
+        "fp":
+            int(fp),
+
+        "fn":
+            int(fn)
+    }
+
+    print("\n=== POOLED CV METRICS ===")
+
+    for k, v in pooled_metrics.items():
+
+        print(
+            f"{k}: {v}"
+        )
+
+    print(
+        "=========================\n"
+    )
+
+    return pooled_metrics
+
+
+
+def run_5_fold_cross_validation(
+    df,
+    patient_col="patient_id",
+    label_col="label",
+    n_splits=5,
+    val_fraction=0.15,
+    random_state=42
+):
+    """
+    Patient-level stratified 5-fold CV.
+
+    Returns
+    -------
+    folds : list
+
+        folds[i] = {
+
+            "train_df": ...,
+
+            "val_df": ...,
+
+            "test_df": ...,
+
+            "train_patients": ...,
+
+            "val_patients": ...,
+
+            "test_patients": ...
+
+        }
+    """
+
+    # ------------------------------------------
+    # One row per patient
+    # ------------------------------------------
+
+    patient_df = (
+        df
+        .groupby(patient_col)[label_col]
+        .max()
+        .reset_index()
+        .rename(
+            columns={
+                label_col:
+                "patient_label"
+            }
+        )
+    )
+
+    print("\n====================================")
+    print("5-FOLD CROSS VALIDATION")
+    print("====================================")
+
+    print(
+        f"Patients: "
+        f"{len(patient_df)}"
+    )
+
+    print(
+        patient_df[
+            "patient_label"
+        ].value_counts()
+    )
+
+    skf = StratifiedKFold(
+        n_splits=n_splits,
+        shuffle=True,
+        random_state=random_state
+    )
+
+    folds = []
+
+    # ------------------------------------------
+    # Fold loop
+    # ------------------------------------------
+
+    for fold_idx, (
+        train_val_idx,
+        test_idx
+    ) in enumerate(
+
+        skf.split(
+            patient_df[patient_col],
+            patient_df["patient_label"]
+        ),
+
+        start=1
+    ):
+
+        print("\n")
+        print("=" * 60)
+        print(f"FOLD {fold_idx}")
+        print("=" * 60)
+
+        # ----------------------------------
+        # Fold test patients
+        # ----------------------------------
+
+        test_patients = (
+            patient_df
+            .iloc[test_idx]
+        )
+
+        train_val_patients = (
+            patient_df
+            .iloc[train_val_idx]
+        )
+
+        # ----------------------------------
+        # Validation split
+        # ----------------------------------
+
+        train_patients, val_patients = (
+            train_test_split(
+                train_val_patients,
+                test_size=val_fraction,
+                stratify=train_val_patients[
+                    "patient_label"
+                ],
+                random_state=random_state
+            )
+        )
+
+        # ----------------------------------
+        # Convert patients -> images
+        # ----------------------------------
+
+        df_train = df[
+            df[patient_col].isin(
+                train_patients[
+                    patient_col
+                ]
+            )
+        ]
+
+        df_val = df[
+            df[patient_col].isin(
+                val_patients[
+                    patient_col
+                ]
+            )
+        ]
+
+        df_test = df[
+            df[patient_col].isin(
+                test_patients[
+                    patient_col
+                ]
+            )
+        ]
+
+        # ----------------------------------
+        # Leakage checks
+        # ----------------------------------
+
+        train_set = set(
+            train_patients[
+                patient_col
+            ]
+        )
+
+        val_set = set(
+            val_patients[
+                patient_col
+            ]
+        )
+
+        test_set = set(
+            test_patients[
+                patient_col
+            ]
+        )
+
+        assert len(
+            train_set & val_set
+        ) == 0
+
+        assert len(
+            train_set & test_set
+        ) == 0
+
+        assert len(
+            val_set & test_set
+        ) == 0
+
+        print(
+            f"Train patients: "
+            f"{len(train_set)}"
+        )
+
+        print(
+            f"Val patients: "
+            f"{len(val_set)}"
+        )
+
+        print(
+            f"Test patients: "
+            f"{len(test_set)}"
+        )
+
+        print()
+
+        print(
+            f"Train images: "
+            f"{len(df_train)}"
+        )
+
+        print(
+            f"Val images: "
+            f"{len(df_val)}"
+        )
+
+        print(
+            f"Test images: "
+            f"{len(df_test)}"
+        )
+
+        print()
+
+        print(
+            "Train labels:"
+        )
+
+        print(
+            df_train[
+                label_col
+            ].value_counts()
+        )
+
+        print(
+            "Val labels:"
+        )
+
+        print(
+            df_val[
+                label_col
+            ].value_counts()
+        )
+
+        print(
+            "Test labels:"
+        )
+
+        print(
+            df_test[
+                label_col
+            ].value_counts()
+        )
+
+        folds.append(
+            {
+                "fold": fold_idx,
+
+                "train_df":
+                    df_train,
+
+                "val_df":
+                    df_val,
+
+                "test_df":
+                    df_test,
+
+                "train_patients":
+                    train_patients,
+
+                "val_patients":
+                    val_patients,
+
+                "test_patients":
+                    test_patients
+            }
+        )
+
+    return folds
+
+
+def stratified_patient_split(
+    df,
+    patient_col="patient_id",
+    label_col="label",
+    train_size=0.70,
+    val_size=0.15,
+    test_size=0.15,
+    random_state=42,
+):
+    """
+    Patient-level stratified split.
+
+    Ensures:
+
+    - No patient leakage
+    - Both eyes remain together
+    - CME/non-CME balance preserved
+    - Separate train/val/test sets
+
+    Returns
+    -------
+    df_train
+    df_val
+    df_test
+    """
+
+    assert abs(
+        train_size + val_size + test_size - 1.0
+    ) < 1e-9
+
+    # ----------------------------------
+    # Create patient-level table
+    # ----------------------------------
+
+    patient_df = (
+        df.groupby(patient_col)[label_col]
+        .max()
+        .reset_index()
+        .rename(
+            columns={
+                label_col: "patient_label"
+            }
+        )
+    )
+
+    print(
+        f"\nUnique patients: "
+        f"{len(patient_df)}"
+    )
+
+    print(
+        "\nPatient-level labels:"
+    )
+
+    print(
+        patient_df["patient_label"]
+        .value_counts()
+    )
+
+    # ----------------------------------
+    # Train split
+    # ----------------------------------
+
     train_patients, temp_patients = train_test_split(
         patient_df,
         test_size=(1.0 - train_size),
         stratify=patient_df["patient_label"],
-        random_state=random_state
+        random_state=random_state,
     )
 
-    # ---- split temp into val and test ----
-    # temp is (val + test) fraction; we want val:test = val_size:test_size
-    val_frac_of_temp = val_size / (val_size + test_size)
+    # ----------------------------------
+    # Validation / Test split
+    # ----------------------------------
+
+    val_fraction_of_temp = (
+        val_size / (val_size + test_size)
+    )
 
     val_patients, test_patients = train_test_split(
         temp_patients,
-        test_size=(1.0 - val_frac_of_temp),
+        test_size=(1.0 - val_fraction_of_temp),
         stratify=temp_patients["patient_label"],
-        random_state=random_state
+        random_state=random_state,
     )
 
-    # ---- map back to image-level rows ----
-    df_train = df[df[patient_col].isin(train_patients[patient_col])]
-    df_val   = df[df[patient_col].isin(val_patients[patient_col])]
-    df_test  = df[df[patient_col].isin(test_patients[patient_col])]
+    # ----------------------------------
+    # Map patients back to image rows
+    # ----------------------------------
 
-    return df_train, df_val, df_test
+    df_train = df[
+        df[patient_col].isin(
+            train_patients[patient_col]
+        )
+    ].copy()
+
+    df_val = df[
+        df[patient_col].isin(
+            val_patients[patient_col]
+        )
+    ].copy()
+
+    df_test = df[
+        df[patient_col].isin(
+            test_patients[patient_col]
+        )
+    ].copy()
+
+    # ----------------------------------
+    # Leakage checks
+    # ----------------------------------
+
+    train_ids = set(df_train[patient_col])
+    val_ids = set(df_val[patient_col])
+    test_ids = set(df_test[patient_col])
+
+    assert len(train_ids & val_ids) == 0
+    assert len(train_ids & test_ids) == 0
+    assert len(val_ids & test_ids) == 0
+
+    print(
+        "\nLeakage check passed."
+    )
+
+    print(
+        "No patient overlap between "
+        "train / val / test."
+    )
+
+    # ----------------------------------
+    # Summary statistics
+    # ----------------------------------
+
+    print("\nImage Counts")
+    print(
+        f"Train: {len(df_train)}"
+    )
+    print(
+        f"Val  : {len(df_val)}"
+    )
+    print(
+        f"Test : {len(df_test)}"
+    )
+
+    print("\nPatient Counts")
+    print(
+        f"Train: {len(train_ids)}"
+    )
+    print(
+        f"Val  : {len(val_ids)}"
+    )
+    print(
+        f"Test : {len(test_ids)}"
+    )
+
+    print("\nTrain Labels")
+    print(
+        df_train[label_col]
+        .value_counts()
+    )
+
+    print("\nValidation Labels")
+    print(
+        df_val[label_col]
+        .value_counts()
+    )
+
+    print("\nTest Labels")
+    print(
+        df_test[label_col]
+        .value_counts()
+    )
+
+    return (
+        df_train,
+        df_val,
+        df_test,
+    )
 
 
 def rename_patient_folders_with_underscore(root_dir, subdirs=["CME", "no CME"]):
@@ -197,41 +902,94 @@ def show_eye_pair(patient_folder_path, save_dir=None):
 
 
 def build_classification_dataset(root_dir):
+    """
+    Build image-level dataframe from directory structure.
+
+    Expected structure:
+
+    root_dir/
+        CME/
+            Patient_1/
+                xxx_OD.jpg
+                xxx_OS.jpg
+
+        non_CME/
+            Patient_2/
+                xxx_OD.jpg
+                xxx_OS.jpg
+
+    Returns
+    -------
+    DataFrame with columns:
+
+        patient_id
+        eye
+        image_path
+        label
+    """
+
     data = []
 
-    for label in os.listdir(root_dir):
+    for label in sorted(os.listdir(root_dir)):
+
         label_path = os.path.join(root_dir, label)
+
         if not os.path.isdir(label_path):
             continue
 
-        for patient_folder in os.listdir(label_path):
-            patient_path = os.path.join(label_path, patient_folder)
+        for patient_folder in sorted(os.listdir(label_path)):
+
+            patient_path = os.path.join(
+                label_path,
+                patient_folder
+            )
+
             if not os.path.isdir(patient_path):
-                
                 continue
 
-            for filename in os.listdir(patient_path):
-                if not filename.lower().endswith((".jpg", ".jpeg", ".png")):
+            for filename in sorted(os.listdir(patient_path)):
+
+                if not filename.lower().endswith(
+                    (".jpg", ".jpeg", ".png")
+                ):
                     continue
 
                 eye = None
+
                 if "OD" in filename.upper():
                     eye = "OD"
+
                 elif "OS" in filename.upper():
                     eye = "OS"
+
                 else:
                     continue
 
-                file_path = os.path.join(patient_path, filename)
+                data.append(
+                    {
+                        "patient_id": patient_folder,
+                        "eye": eye,
+                        "image_path": os.path.join(
+                            patient_path,
+                            filename
+                        ),
+                        "label": label,
+                    }
+                )
 
-                data.append({
-                    "patient_id": patient_folder,
-                    "eye": eye,
-                    "image_path": file_path,
-                    "label": label
-                })
+    df = pd.DataFrame(data)
 
-    return pd.DataFrame(data)
+    print("\nDataset Summary")
+    print(f"Images   : {len(df)}")
+    print(
+        f"Patients : "
+        f"{df['patient_id'].nunique()}"
+    )
+
+    print("\nLabel Distribution")
+    print(df["label"].value_counts())
+
+    return df
 
 
 def resize_images(df, output_root, target_size=(350, 350)):
@@ -295,7 +1053,11 @@ def build_resnet_for_grayscale(num_classes=2):
 
     # Replace the final FC layer
     num_ftrs = model.fc.in_features
-    model.fc = nn.Linear(num_ftrs, num_classes)
+
+    model.fc = nn.Sequential(
+        nn.Dropout(0.5),
+        nn.Linear(num_ftrs, num_classes)
+    )
 
     return model
 
@@ -415,6 +1177,52 @@ def plot_pr_curve(targets, probs, save_path):
 
     plt.close(fig)
     return ap
+
+
+def plot_roc_curve(targets, probs, save_path):
+
+    from sklearn.metrics import roc_curve, roc_auc_score
+
+    fpr, tpr, _ = roc_curve(targets, probs)
+
+    auc = roc_auc_score(targets, probs)
+
+    fig, ax = plt.subplots(figsize=(6,5))
+
+    ax.plot(
+        fpr,
+        tpr,
+        linewidth=2,
+        label=f"AUC = {auc:.3f}"
+    )
+
+    ax.plot(
+        [0,1],
+        [0,1],
+        linestyle="--"
+    )
+
+    ax.set_xlabel("False Positive Rate")
+    ax.set_ylabel("True Positive Rate")
+    ax.set_title("ROC Curve")
+
+    ax.legend()
+
+    ax.grid(True, alpha=0.3)
+
+    fig.tight_layout()
+
+    fig.savefig(
+        save_path,
+        format="pdf",
+        bbox_inches="tight",
+        pad_inches=0.02,
+        dpi=300
+    )
+
+    plt.close(fig)
+
+    return auc
 
 
 # -----------------------------
