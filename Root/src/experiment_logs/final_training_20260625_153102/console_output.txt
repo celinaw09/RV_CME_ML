@@ -1,0 +1,184 @@
+============================================================
+Experiment folder: experiment_logs/final_training_20260625_153102
+PyTorch version: 2.7.0
+Device: cuda:0
+============================================================
+
+Dataset Summary
+Images   : 222
+Patients : 132
+
+Label Distribution
+non_CME    131
+CME         91
+Name: label, dtype: int64
+
+Final dataset summary
+Images   : 222
+Patients : 132
+Label distribution:
+0    131
+1     91
+Name: label, dtype: int64
+
+=== TRAINABLE PARAMETERS ===
+conv1.weight                                       False
+bn1.weight                                         False
+bn1.bias                                           False
+layer1.0.conv1.weight                              False
+layer1.0.bn1.weight                                False
+layer1.0.bn1.bias                                  False
+layer1.0.conv2.weight                              False
+layer1.0.bn2.weight                                False
+layer1.0.bn2.bias                                  False
+layer1.1.conv1.weight                              False
+layer1.1.bn1.weight                                False
+layer1.1.bn1.bias                                  False
+layer1.1.conv2.weight                              False
+layer1.1.bn2.weight                                False
+layer1.1.bn2.bias                                  False
+layer2.0.conv1.weight                              False
+layer2.0.bn1.weight                                False
+layer2.0.bn1.bias                                  False
+layer2.0.conv2.weight                              False
+layer2.0.bn2.weight                                False
+layer2.0.bn2.bias                                  False
+layer2.0.downsample.0.weight                       False
+layer2.0.downsample.1.weight                       False
+layer2.0.downsample.1.bias                         False
+layer2.1.conv1.weight                              False
+layer2.1.bn1.weight                                False
+layer2.1.bn1.bias                                  False
+layer2.1.conv2.weight                              False
+layer2.1.bn2.weight                                False
+layer2.1.bn2.bias                                  False
+layer3.0.conv1.weight                              False
+layer3.0.bn1.weight                                False
+layer3.0.bn1.bias                                  False
+layer3.0.conv2.weight                              False
+layer3.0.bn2.weight                                False
+layer3.0.bn2.bias                                  False
+layer3.0.downsample.0.weight                       False
+layer3.0.downsample.1.weight                       False
+layer3.0.downsample.1.bias                         False
+layer3.1.conv1.weight                              False
+layer3.1.bn1.weight                                False
+layer3.1.bn1.bias                                  False
+layer3.1.conv2.weight                              False
+layer3.1.bn2.weight                                False
+layer3.1.bn2.bias                                  False
+layer4.0.conv1.weight                              True
+layer4.0.bn1.weight                                True
+layer4.0.bn1.bias                                  True
+layer4.0.conv2.weight                              True
+layer4.0.bn2.weight                                True
+layer4.0.bn2.bias                                  True
+layer4.0.downsample.0.weight                       True
+layer4.0.downsample.1.weight                       True
+layer4.0.downsample.1.bias                         True
+layer4.1.conv1.weight                              True
+layer4.1.bn1.weight                                True
+layer4.1.bn1.bias                                  True
+layer4.1.conv2.weight                              True
+layer4.1.bn2.weight                                True
+layer4.1.bn2.bias                                  True
+fc.1.weight                                        True
+fc.1.bias                                          True
+Trainable params: 8,394,754
+Total params: 11,171,266
+Percent trainable: 75.15%
+Class weights: tensor([0.8473, 1.2198], device='cuda:0')
+Train Epoch: 1 [0/222 (0%)]	Loss: 0.852923
+Train Epoch: 1 [160/222 (71%)]	Loss: 0.617535
+Train Epoch 1 Average loss: 0.6890, Accuracy: 132/222 (59.46%)
+Train Epoch: 2 [0/222 (0%)]	Loss: 0.404713
+Train Epoch: 2 [160/222 (71%)]	Loss: 0.451750
+Train Epoch 2 Average loss: 0.3667, Accuracy: 185/222 (83.33%)
+Train Epoch: 3 [0/222 (0%)]	Loss: 0.289685
+Train Epoch: 3 [160/222 (71%)]	Loss: 0.189836
+Train Epoch 3 Average loss: 0.2509, Accuracy: 200/222 (90.09%)
+Train Epoch: 4 [0/222 (0%)]	Loss: 0.142408
+Train Epoch: 4 [160/222 (71%)]	Loss: 0.147672
+Train Epoch 4 Average loss: 0.2015, Accuracy: 208/222 (93.69%)
+Train Epoch: 5 [0/222 (0%)]	Loss: 0.280616
+Train Epoch: 5 [160/222 (71%)]	Loss: 0.055111
+Train Epoch 5 Average loss: 0.1209, Accuracy: 214/222 (96.40%)
+Train Epoch: 6 [0/222 (0%)]	Loss: 0.031373
+Train Epoch: 6 [160/222 (71%)]	Loss: 0.035767
+Train Epoch 6 Average loss: 0.1205, Accuracy: 215/222 (96.85%)
+Train Epoch: 7 [0/222 (0%)]	Loss: 0.079914
+Train Epoch: 7 [160/222 (71%)]	Loss: 0.020180
+Train Epoch 7 Average loss: 0.0868, Accuracy: 215/222 (96.85%)
+Train Epoch: 8 [0/222 (0%)]	Loss: 0.056175
+Train Epoch: 8 [160/222 (71%)]	Loss: 0.051287
+Train Epoch 8 Average loss: 0.0611, Accuracy: 219/222 (98.65%)
+Train Epoch: 9 [0/222 (0%)]	Loss: 0.021186
+Train Epoch: 9 [160/222 (71%)]	Loss: 0.019538
+Train Epoch 9 Average loss: 0.0312, Accuracy: 221/222 (99.55%)
+Train Epoch: 10 [0/222 (0%)]	Loss: 0.015672
+Train Epoch: 10 [160/222 (71%)]	Loss: 0.013523
+Train Epoch 10 Average loss: 0.0259, Accuracy: 221/222 (99.55%)
+Train Epoch: 11 [0/222 (0%)]	Loss: 0.011727
+Train Epoch: 11 [160/222 (71%)]	Loss: 0.016691
+Train Epoch 11 Average loss: 0.0329, Accuracy: 221/222 (99.55%)
+Train Epoch: 12 [0/222 (0%)]	Loss: 0.017919
+Train Epoch: 12 [160/222 (71%)]	Loss: 0.005323
+Train Epoch 12 Average loss: 0.0249, Accuracy: 222/222 (100.00%)
+Train Epoch: 13 [0/222 (0%)]	Loss: 0.003431
+Train Epoch: 13 [160/222 (71%)]	Loss: 0.004284
+Train Epoch 13 Average loss: 0.0149, Accuracy: 222/222 (100.00%)
+Train Epoch: 14 [0/222 (0%)]	Loss: 0.002937
+Train Epoch: 14 [160/222 (71%)]	Loss: 0.002987
+Train Epoch 14 Average loss: 0.0074, Accuracy: 222/222 (100.00%)
+Train Epoch: 15 [0/222 (0%)]	Loss: 0.003743
+Train Epoch: 15 [160/222 (71%)]	Loss: 0.076969
+Train Epoch 15 Average loss: 0.0135, Accuracy: 222/222 (100.00%)
+Train Epoch: 16 [0/222 (0%)]	Loss: 0.007351
+Train Epoch: 16 [160/222 (71%)]	Loss: 0.001301
+Train Epoch 16 Average loss: 0.0125, Accuracy: 222/222 (100.00%)
+Train Epoch: 17 [0/222 (0%)]	Loss: 0.004547
+Train Epoch: 17 [160/222 (71%)]	Loss: 0.003010
+Train Epoch 17 Average loss: 0.0117, Accuracy: 222/222 (100.00%)
+Train Epoch: 18 [0/222 (0%)]	Loss: 0.002409
+Train Epoch: 18 [160/222 (71%)]	Loss: 0.003957
+Train Epoch 18 Average loss: 0.0051, Accuracy: 222/222 (100.00%)
+Train Epoch: 19 [0/222 (0%)]	Loss: 0.007064
+Train Epoch: 19 [160/222 (71%)]	Loss: 0.007168
+Train Epoch 19 Average loss: 0.0140, Accuracy: 221/222 (99.55%)
+Train Epoch: 20 [0/222 (0%)]	Loss: 0.003741
+Train Epoch: 20 [160/222 (71%)]	Loss: 0.002677
+Train Epoch 20 Average loss: 0.0233, Accuracy: 219/222 (98.65%)
+Train Epoch: 21 [0/222 (0%)]	Loss: 0.001087
+Train Epoch: 21 [160/222 (71%)]	Loss: 0.006308
+Train Epoch 21 Average loss: 0.0072, Accuracy: 222/222 (100.00%)
+Train Epoch: 22 [0/222 (0%)]	Loss: 0.004347
+Train Epoch: 22 [160/222 (71%)]	Loss: 0.001944
+Train Epoch 22 Average loss: 0.0160, Accuracy: 222/222 (100.00%)
+Train Epoch: 23 [0/222 (0%)]	Loss: 0.001871
+Train Epoch: 23 [160/222 (71%)]	Loss: 0.009300
+Train Epoch 23 Average loss: 0.0134, Accuracy: 221/222 (99.55%)
+Train Epoch: 24 [0/222 (0%)]	Loss: 0.041266
+Train Epoch: 24 [160/222 (71%)]	Loss: 0.001525
+Train Epoch 24 Average loss: 0.0102, Accuracy: 222/222 (100.00%)
+Train Epoch: 25 [0/222 (0%)]	Loss: 0.017997
+Train Epoch: 25 [160/222 (71%)]	Loss: 0.022101
+Train Epoch 25 Average loss: 0.0234, Accuracy: 220/222 (99.10%)
+Train Epoch: 26 [0/222 (0%)]	Loss: 0.054798
+Train Epoch: 26 [160/222 (71%)]	Loss: 0.000975
+Train Epoch 26 Average loss: 0.0059, Accuracy: 222/222 (100.00%)
+Train Epoch: 27 [0/222 (0%)]	Loss: 0.000697
+Train Epoch: 27 [160/222 (71%)]	Loss: 0.003439
+Train Epoch 27 Average loss: 0.0109, Accuracy: 221/222 (99.55%)
+Train Epoch: 28 [0/222 (0%)]	Loss: 0.067607
+Train Epoch: 28 [160/222 (71%)]	Loss: 0.003853
+Train Epoch 28 Average loss: 0.0315, Accuracy: 219/222 (98.65%)
+Train Epoch: 29 [0/222 (0%)]	Loss: 0.002094
+Train Epoch: 29 [160/222 (71%)]	Loss: 0.004458
+Train Epoch 29 Average loss: 0.0049, Accuracy: 222/222 (100.00%)
+Train Epoch: 30 [0/222 (0%)]	Loss: 0.005984
+Train Epoch: 30 [160/222 (71%)]	Loss: 0.002874
+Train Epoch 30 Average loss: 0.0189, Accuracy: 220/222 (99.10%)
+
+Training complete.
+Final model saved to: checkpoint_dir/best_model.pth
+Duplicate model saved to: experiment_logs/final_training_20260625_153102/best_model.pth

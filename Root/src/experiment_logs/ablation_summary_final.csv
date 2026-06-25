@@ -1,0 +1,2 @@
+experiment_name,experiment_dir,learning_rate,image_size,augmentation,accuracy_mean,accuracy_std,auroc_mean,auroc_std,auprc_mean,auprc_std,sensitivity_mean,sensitivity_std,specificity_mean,specificity_std,f1_mean,f1_std
+FINAL_MODEL,experiment_logs/FINAL_MODEL_20260625_145722,0.0001,224,basic,0.7779157952121107,0.11187962778916834,0.8113339083701657,0.08692532003576528,0.793453154235108,0.09286235778871056,0.6785964908487333,0.18344212230020457,0.850173381847188,0.09316719314269213,0.7104496738117427,0.15038914862112673

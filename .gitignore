@@ -25,19 +25,39 @@ env/
 Thumbs.db
 
 # =========================
-# Temporary large arrays
+# Temporary arrays
 # =========================
 *.npy
 *.npz
 
 # =========================
-# XAI outputs (temporary)
+# Temporary XAI outputs
 # =========================
-xai_plots/
+Root/src/xai_plots/
 
 # =========================
-# Checkpoints
-# Keep only the best model
+# Published checkpoint
 # =========================
-checkpoint_dir/*
-!checkpoint_dir/best_model.pth
+Root/src/checkpoint_dir/*
+!Root/src/checkpoint_dir/best_model.pth
+
+# =========================
+# Fold-level experiment artifacts
+# =========================
+Root/src/experiment_logs/*/fold_*/
+Root/src/experiment_logs/*/fold_summary.csv
+Root/src/experiment_logs/**/*.pth
+Root/src/experiment_logs/**/*.pt
+
+# Keep aggregate outputs
+!Root/src/experiment_logs/**/console_output.txt
+!Root/src/experiment_logs/**/cross_validation_results.csv
+!Root/src/experiment_logs/**/cv_summary.json
+!Root/src/experiment_logs/**/hyperparameters.json
+!Root/src/experiment_logs/**/cv_confusion_matrix.png
+!Root/src/experiment_logs/**/cv_confusion_matrix.pdf
+!Root/src/experiment_logs/**/cv_roc_curve.pdf
+!Root/src/experiment_logs/**/cv_pr_curve.pdf
+
+# Keep ablation summaries
+!Root/src/experiment_logs/ablation_summary*.csv
