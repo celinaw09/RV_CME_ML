@@ -21,7 +21,7 @@ The row order is unchanged from the finalized analysis because the saved bootstr
 
 ## Model selection
 
-`model_selection/Supplementary_Table_S1.xlsx` contains all 720 candidate–outer-development-cohort records. Its five selected rows reproduce the configurations and inner-validation AUROCs reported in manuscript Table 4. Its marginal checks reproduce manuscript Table 5. `model_selection/all_inner_fold_metrics.csv` provides the underlying 2,880 inner-fold metric records.
+`model_selection/Supplementary_Table_S1.xlsx` contains all 720 candidate–outer-development-cohort records. Its five selected rows reproduce the configurations and inner-validation AUROCs reported in manuscript Table 4. Its marginal checks reproduce manuscript Table 6. `model_selection/all_inner_fold_metrics.csv` provides the underlying 2,880 inner-fold metric records.
 
 ## Internal benchmark
 

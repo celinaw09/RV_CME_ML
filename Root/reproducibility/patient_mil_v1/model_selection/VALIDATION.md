@@ -9,7 +9,7 @@ Source: `all_inner_fold_metrics.csv` plus each outer cohort's saved configuratio
 - PASS — Selected mean inner-validation AUROCs: 0.901551, 0.898295, 0.899691, 0.941012, and 0.910056
 - PASS — Selected values summarize to 0.910 ± 0.018 using sample SD across the five cohorts
 - PASS — Selected configurations and values reproduce manuscript Table 4
-- PASS — Marginal candidate–outer-cohort summaries reproduce manuscript Table 5 after rounding to three decimals
+- PASS — Marginal candidate–outer-cohort summaries reproduce manuscript Table 6 after rounding to three decimals
 - PASS — No outer-test predictions are included in S1 or used for model selection
 
 The workbook's `Selected Check` and `Marginal Check` worksheets retain the numerical reconciliation alongside the 720-record `S1 All Candidates` worksheet.
