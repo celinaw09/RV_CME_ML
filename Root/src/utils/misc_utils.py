@@ -853,7 +853,7 @@ def show_eye_pair(patient_folder_path, save_dir=None):
     Visualizes and optionally saves a pair of images (OD and OS) from a single patient folder.
     
     Args:
-        patient_folder_path (str): Path to a patient's folder (e.g., ACB_OU)
+        patient_folder_path (str): Path to a patient's folder (e.g., Patient001_OU)
         save_dir (str or None): Folder to save the output plot. If None, does not save.
     """
     # Find OD and OS images
@@ -1034,9 +1034,14 @@ def count_labels_in_dataloader(dataloader):
 
 
 
-def build_resnet_for_grayscale(num_classes=2):
-    # Load pretrained ImageNet weights (new API)
-    weights = ResNet18_Weights.DEFAULT
+def build_resnet_for_grayscale(num_classes=2, pretrained=True):
+    """Build a one-channel ResNet-18 with optional ImageNet initialization.
+
+    When pretrained, the grayscale stem is initialized by averaging the RGB
+    ImageNet filters.  When training from scratch, torchvision's native random
+    initialization is retained for the newly created one-channel stem.
+    """
+    weights = ResNet18_Weights.DEFAULT if pretrained else None
     model = models.resnet18(weights=weights)
 
     # Modify first conv layer to accept 1 grayscale channel
@@ -1046,8 +1051,9 @@ def build_resnet_for_grayscale(num_classes=2):
         1, 64, kernel_size=7, stride=2, padding=3, bias=False
     )
 
-    # Initialize grayscale conv weights by averaging pretrained RGB weights
-    new_conv.weight.data = old_conv.weight.data.mean(dim=1, keepdim=True)
+    if pretrained:
+        # Preserve pretrained low-level features when converting RGB to gray.
+        new_conv.weight.data = old_conv.weight.data.mean(dim=1, keepdim=True)
 
     model.conv1 = new_conv
 
@@ -1060,6 +1066,39 @@ def build_resnet_for_grayscale(num_classes=2):
     )
 
     return model
+
+
+class SimpleGrayscaleCNN(nn.Module):
+    """Compact, fully trainable CNN baseline for grayscale retinal images."""
+
+    def __init__(self, num_classes=2):
+        super().__init__()
+        self.features = nn.Sequential(
+            nn.Conv2d(1, 32, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(32),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(2),
+            nn.Conv2d(32, 64, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(64),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(2),
+            nn.Conv2d(64, 128, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(128),
+            nn.ReLU(inplace=True),
+            nn.AdaptiveAvgPool2d((1, 1)),
+        )
+        self.classifier = nn.Sequential(
+            nn.Flatten(),
+            nn.Dropout(0.5),
+            nn.Linear(128, num_classes),
+        )
+
+    def forward(self, x):
+        return self.classifier(self.features(x))
+
+
+def build_simple_cnn_for_grayscale(num_classes=2):
+    return SimpleGrayscaleCNN(num_classes=num_classes)
 
 
 
@@ -1263,7 +1302,7 @@ def generate_prc_and_confusion(
     device,
     test_loader,
     checkpoint_path,
-    out_dir="/data2/users/koushani/chbmit/Root/plots",
+    out_dir="plots",
     threshold=0.5,
 ):
     os.makedirs(out_dir, exist_ok=True)

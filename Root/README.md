@@ -1,165 +1,108 @@
-# CME Classification from FAA Imaging
+# Patient-level CME classification from fluorescein angiography
 
-Deep learning framework for patient-level classification of Cystoid Macular Edema (CME) versus Non-CME from retinal FAA images.
+This directory contains the code and reviewer-facing reproducibility artifacts for the final 117-patient analysis of concurrent cystoid macular edema (CME) in retinal vasculitis.
 
----
+The primary endpoint is patient-level CME. Every available eye image is encoded by a shared ImageNet-pretrained ResNet-18. The replacement head consists of dropout (`p=0.5`) and a two-logit linear layer. For each eye, CME log-odds are calculated as the positive logit minus the negative logit. The patient's score is the maximum image-level CME log-odds across the available eyes, so training and evaluation produce one label, loss, probability, and prediction per patient.
 
-## Overview
+## Final analysis
 
-This repository implements a binary image classification pipeline designed to evaluate CME detection under a strict patient-level cross-validation protocol.
+- 207 late-phase FA images from 117 patients
+- 49 CME-positive and 68 CME-negative patients
+- Five-fold outer and four-fold inner patient-level nested cross-validation
+- 144 candidate configurations per outer-development cohort
+- Configuration selection by mean inner-validation AUROC
+- Fold-specific thresholds selected by Youden's J on final-validation data
+- One evaluation on each untouched outer-test fold
+- Patient-level percentile bootstrap confidence intervals from 5,000 resamples (seed 951)
 
-The primary goal is to estimate real-world generalization performance while preventing information leakage between training and evaluation datasets.
+Pooled untouched outer-test performance:
 
-Key characteristics of the framework include:
+| Metric | Estimate | 95% CI |
+|---|---:|---:|
+| AUROC | 0.708 | 0.610–0.802 |
+| AUPRC | 0.626 | 0.493–0.755 |
+| Accuracy | 0.726 | 0.641–0.803 |
+| Sensitivity | 0.694 | 0.558–0.822 |
+| Specificity | 0.750 | 0.643–0.853 |
+| Precision | 0.667 | 0.532–0.796 |
+| F1 | 0.680 | 0.563–0.780 |
 
-- Patient-level stratified cross-validation
-- Validation-driven threshold optimization
-- Independent held-out test evaluation
-- Fold-specific checkpointing
-- Complete experiment logging
-- Reproducible train/validation/test splits
-- Aggregate performance analysis across folds
+The pooled confusion matrix is TN=51, FP=17, FN=15, TP=34.
 
----
-
-## Methodology
-
-### Cross-Validation Strategy
-
-Evaluation is performed using 5-fold patient-level stratified cross-validation.
-
-For each fold:
-
-1. Patients are split into training, validation, and test partitions.
-2. Model weights are optimized using only the training set.
-3. Classification threshold is selected using validation data.
-4. The selected threshold is frozen.
-5. Final performance is computed on the held-out test set.
-
-Because splitting occurs at the patient level, images from the same patient never appear in multiple partitions.
-
-This prevents train-test leakage and provides a more realistic estimate of deployment performance.
-
----
-
-### Threshold Selection
-
-Threshold optimization is performed exclusively on validation predictions.
-
-The chosen threshold is then applied unchanged to the corresponding test set.
-
-No test data are used during threshold selection.
-
----
-
-## Repository Structure
+## Repository layout
 
 ```text
-.
+Root/
+├── configs/
+│   └── patient_mil_primary.json
+├── reproducibility/patient_mil_v1/
+│   ├── outer_test_predictions_deidentified.csv
+│   ├── metrics/
+│   ├── model_selection/
+│   ├── internal_benchmark/
+│   └── checkpoints/
+├── scripts/
+│   └── run_patient_mil_primary.sh
 ├── src/
-│   ├── main.py
-│   ├── utils/
-│   │   ├── train.py
-│   │   └── misc_utils.py
-│   │
-│   ├── checkpoint_dir/
-│   │   └── best_model.pth
-│   │
-│   └── experiment_logs/
-│       └── run_20260621_083308/
-│           ├── console_output.txt
-│           ├── cv_summary.json
-│           ├── fold_summary.csv
-│           ├── cross_validation_results.csv
-│           ├── cv_confusion_matrix.png
-│           ├── cv_roc_curve.pdf
-│           ├── cv_pr_curve.pdf
-│           │
-│           ├── fold_1/
-│           ├── fold_2/
-│           ├── fold_3/
-│           ├── fold_4/
-│           └── fold_5/
-│
-└── README.md
+│   ├── nested_cv_pipeline.py
+│   ├── recalculate_patient_metrics.py
+│   └── tests/test_nested_cv_pipeline.py
+└── requirements.txt
 ```
----
 
-## Experimental Run
+Files outside the paths listed above are legacy materials from earlier repository versions and must not be used to reproduce or report the final 117-patient analysis.
 
-Run ID: run_20260621_083308
+## Environment
 
-Date: 2026-06-21
+The finalized run used Python 3.11.8, PyTorch 2.3.0, torchvision 0.18.0, scikit-learn 1.4.0, NumPy 1.26.2, pandas 2.2.0, Pillow 10.1.0, and macOS 15.6.1 arm64. Training used Apple Metal Performance Shaders in one sequential process; CUDA and cuDNN were not available. The exact Mac chip and RAM were not recorded.
 
-### Aggregate Test Performance
+Recreate the Conda environment with:
 
-| Metric | Mean ± Std |
-|----------|----------:|
-| Accuracy | 73.05 ± 4.08% |
-| AUROC | 77.99 ± 7.35% |
-| AUPRC | 76.01 ± 7.85% |
-| Sensitivity | 55.96 ± 21.51% |
-| Specificity | 84.45 ± 10.15% |
-| F1 Score | 60.95 ± 13.94% |
+```bash
+conda env create -f environment.yml
+conda activate rv-cme-patient-mil
+```
 
----
+Alternatively, install the Python dependencies into an existing Python 3.11.8 environment with:
 
-## Confusion Matrix
+```bash
+python -m pip install -r requirements.txt
+```
 
-<p align="center">
-  <img src="src/experiment_logs/run_20260621_083308/cv_confusion_matrix.png" width="700">
-</p>
+## Recalculate the published patient-level metrics
 
-Aggregate confusion matrix computed from predictions across all held-out test folds.
+From `Root/`:
 
----
+```bash
+python src/recalculate_patient_metrics.py \
+  --predictions reproducibility/patient_mil_v1/outer_test_predictions_deidentified.csv \
+  --output-dir reproducibility/patient_mil_v1/recalculated_metrics
+```
 
-## Results Summary
+This calculation does not require the clinical image dataset. It reproduces the eight point estimates, the confusion matrix, and the saved 5,000-resample confidence intervals.
 
-The model demonstrates:
+## Re-run nested cross-validation
 
-- Good discriminative performance (AUROC ≈ 0.78)
-- Strong precision-recall behavior (AUPRC ≈ 0.76)
-- High specificity (84.45%)
-- Moderate sensitivity (55.96%)
+The clinical images are not distributed in this repository. Arrange authorized data as:
 
-The current operating point prioritizes reduction of false-positive CME predictions while maintaining clinically useful detection performance.
+```text
+allpatients_resized/
+├── CME/
+└── non_CME/
+```
 
----
+Then run:
 
-## Reproducibility
+```bash
+bash scripts/run_patient_mil_primary.sh /absolute/path/to/allpatients_resized
+```
 
-Every experiment stores:
+The complete run is computationally expensive because it evaluates 720 candidate–outer-cohort combinations, each by four inner folds, before final fitting and the development-only internal benchmarks.
 
-- Exact train splits
-- Exact validation splits
-- Exact test splits
-- Fold-specific metrics
-- Aggregate metrics
-- Best model checkpoints
-- Training logs
-- Prediction outputs
-- Evaluation visualizations
+## Privacy
 
-This enables complete reproduction of all reported results.
+The released outer-test table contains study-specific identifiers `P001`–`P117` only. Raw images, original filenames, identifier mappings, and patient-name-bearing split or XAI logs are not part of the final reproducibility package.
 
----
+## Versioning
 
-## Logged Artifacts
-
-| Artifact | Description |
-|-----------|-------------|
-| cv_summary.json | Aggregate cross-validation metrics |
-| fold_summary.csv | Fold-level performance summary |
-| cross_validation_results.csv | Test predictions across all folds |
-| console_output.txt | Full training and evaluation logs |
-| cv_confusion_matrix.png | Aggregate confusion matrix |
-| cv_roc_curve.pdf | Aggregate ROC curve |
-| cv_pr_curve.pdf | Aggregate Precision-Recall curve |
-| fold_*/best_model.pth | Best checkpoint for each fold |
-
----
-
-## Citation
-
-If this repository contributes to your research, please cite the associated publication when available.
+The reviewer response should cite the immutable commit created after these files are committed and pushed. A GitHub release tag such as `patient-mil-v1.0.0` may also be attached to that commit.

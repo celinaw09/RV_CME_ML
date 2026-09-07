@@ -1,0 +1,16 @@
+name: rv-cme-patient-mil
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11.8
+  - pip
+  - pip:
+      - torch==2.3.0
+      - torchvision==0.18.0
+      - scikit-learn==1.4.0
+      - numpy==1.26.2
+      - pandas==2.2.0
+      - Pillow==10.1.0
+      - matplotlib==3.8.2
+      - opencv-python-headless==4.9.0.80
+      - grad-cam==1.5.7

@@ -1,0 +1,155 @@
+{
+  "analysis_name": "Final 117-patient CME multiple-instance learning analysis",
+  "analysis_schema_version": "patient_mil_max_or_v1",
+  "entry_point": "Root/src/nested_cv_pipeline.py",
+  "data": {
+    "data_root": "data/RV_CME_ML_FINAL/allpatients_resized",
+    "images": 207,
+    "patients": 117,
+    "cme_positive_patients": 49,
+    "cme_negative_patients": 68,
+    "patient_label_rule": "CME-positive if at least one available eye image is CME-positive"
+  },
+  "model": {
+    "architecture": "ResNet-18",
+    "initialization": "ImageNet",
+    "input_channels": 1,
+    "grayscale_stem": "Replace conv1 with a one-channel convolution and initialize it with the channel-wise mean of the pretrained RGB conv1 weights",
+    "classification_head": "Dropout(p=0.5) followed by a two-logit linear layer",
+    "patient_input": "All available eye images as a variable-size bag",
+    "patient_pooling": "Maximum image-level CME log-odds",
+    "training_output": "One label, loss, probability, and prediction per patient"
+  },
+  "preprocessing": {
+    "laterality_alignment": "Mirror OS images before shared encoding",
+    "resize": "Square resize to the candidate input resolution",
+    "training_augmentation": "Random horizontal flip with probability 0.5",
+    "evaluation_augmentation": "None",
+    "normalization": "Mean and standard deviation calculated exclusively from the images in the current training partition"
+  },
+  "cross_validation": {
+    "outer_splitter": "StratifiedGroupKFold grouped by patient_id",
+    "outer_folds": 5,
+    "outer_partition_seed": 42,
+    "inner_splitter": "StratifiedGroupKFold grouped by patient_id",
+    "inner_folds": 4,
+    "inner_split_seed_formula": "42 + 1000 * outer_fold",
+    "selection_metric": "Mean inner-validation AUROC",
+    "candidate_configurations_per_outer_development_cohort": 144,
+    "final_validation_splits": 5,
+    "final_validation_seed_formula": "42 + 1000 * outer_fold + 77",
+    "final_fit_seed_formula": "42 + 100000 * outer_fold + 999",
+    "threshold_selection": "Youden J calculated only from the final-validation predictions",
+    "outer_test_use": "One evaluation after configuration selection and threshold freezing"
+  },
+  "candidate_grid": {
+    "learning_rates": [0.00001, 0.0001, 0.001],
+    "schedulers": ["step", "cosine", "none"],
+    "input_resolutions_px": [224, 320],
+    "fine_tuning_strategies": [
+      "fc_only",
+      "layer4_fc",
+      "layer3_layer4_fc",
+      "full"
+    ],
+    "loss_functions": ["weighted_cross_entropy", "focal"]
+  },
+  "training": {
+    "optimizer": "AdamW",
+    "epochs": 30,
+    "early_stopping_patience": 10,
+    "early_stopping_min_delta": 0.0001,
+    "batch_size_patients": 8,
+    "num_workers": 0,
+    "weight_decay": 0.001,
+    "step_scheduler_step_size": 10,
+    "scheduler_gamma": 0.5,
+    "cosine_eta_min": 0.000001,
+    "focal_gamma": 2.0,
+    "class_weights": "Calculated from patient counts in the current training partition",
+    "base_seed": 42,
+    "requested_deterministic_mode": true,
+    "strict_pytorch_deterministic_algorithms_enforced": false
+  },
+  "evaluation": {
+    "analysis_unit": "patient",
+    "positive_probability_column": "prob_CME",
+    "prediction_rule": "prob_CME greater than or equal to the row's fold-specific threshold",
+    "bootstrap_iterations": 5000,
+    "bootstrap_seed": 951,
+    "bootstrap_unit": "patient",
+    "confidence_interval": "2.5th and 97.5th percentiles of patient-level bootstrap estimates"
+  },
+  "fold_specific_final_models": [
+    {
+      "outer_fold": 1,
+      "configuration_id": "lr_1em03_sched_step_img_320_ft_layer3_layer4_fc_loss_weighted_cross_entropy_2e77ebeaf3",
+      "learning_rate": 0.001,
+      "scheduler": "step",
+      "input_resolution_px": 320,
+      "fine_tuning": "layer3_layer4_fc",
+      "loss": "weighted_cross_entropy",
+      "validation_threshold": 0.3760009706020355
+    },
+    {
+      "outer_fold": 2,
+      "configuration_id": "lr_1em03_sched_none_img_320_ft_layer3_layer4_fc_loss_weighted_cross_entropy_65901fafb2",
+      "learning_rate": 0.001,
+      "scheduler": "none",
+      "input_resolution_px": 320,
+      "fine_tuning": "layer3_layer4_fc",
+      "loss": "weighted_cross_entropy",
+      "validation_threshold": 0.7818639874458313
+    },
+    {
+      "outer_fold": 3,
+      "configuration_id": "lr_1em03_sched_cosine_img_224_ft_layer3_layer4_fc_loss_weighted_cross_entropy_910d3681f6",
+      "learning_rate": 0.001,
+      "scheduler": "cosine",
+      "input_resolution_px": 224,
+      "fine_tuning": "layer3_layer4_fc",
+      "loss": "weighted_cross_entropy",
+      "validation_threshold": 0.31667959690093994
+    },
+    {
+      "outer_fold": 4,
+      "configuration_id": "lr_1em03_sched_step_img_224_ft_layer4_fc_loss_focal_59cd78cb54",
+      "learning_rate": 0.001,
+      "scheduler": "step",
+      "input_resolution_px": 224,
+      "fine_tuning": "layer4_fc",
+      "loss": "focal",
+      "validation_threshold": 0.8076737523078918
+    },
+    {
+      "outer_fold": 5,
+      "configuration_id": "lr_1em04_sched_none_img_320_ft_full_loss_weighted_cross_entropy_931a87fcf8",
+      "learning_rate": 0.0001,
+      "scheduler": "none",
+      "input_resolution_px": 320,
+      "fine_tuning": "full",
+      "loss": "weighted_cross_entropy",
+      "validation_threshold": 0.32119518518447876
+    }
+  ],
+  "runtime_environment": {
+    "python": "3.11.8",
+    "pytorch": "2.3.0",
+    "torchvision": "0.18.0",
+    "scikit_learn": "1.4.0",
+    "numpy": "1.26.2",
+    "pandas": "2.2.0",
+    "pillow": "10.1.0",
+    "platform": "macOS 15.6.1 arm64",
+    "accelerator": "Apple Metal Performance Shaders (MPS)",
+    "execution_strategy": "Sequential single-process execution",
+    "cuda_available": false,
+    "cudnn_available": false
+  },
+  "source_sha256": {
+    "Root/src/nested_cv_pipeline.py": "d6bce322cb7190f006c8dbddf5f0921577738aaaf6052f4994a648c195f8f695",
+    "Root/src/dataset/dataset.py": "242c21075e913b013f6ffd902d93b40d7a07c9faaaff34e589bdc93823872f1f",
+    "Root/src/utils/misc_utils.py": "d93728eda2740de32b5713867d2439ef20e4141e35c79124e76299bfd5bf6479",
+    "Root/src/utils/xai_utils.py": "59ce636842ca7b90c77e8045e88d0901bc336c3c84471e1a1d9f019a131658c0"
+  }
+}

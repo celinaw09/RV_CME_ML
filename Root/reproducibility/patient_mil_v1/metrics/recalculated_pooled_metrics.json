@@ -1,0 +1,95 @@
+{
+  "analysis_unit": "patient",
+  "threshold_application": "row-specific fold-specific validation threshold",
+  "patients": 117,
+  "cme_positive_patients": 49,
+  "cme_negative_patients": 68,
+  "bootstrap_iterations": 5000,
+  "bootstrap_seed": 951,
+  "thresholds_by_outer_fold": [
+    {
+      "outer_fold": 1,
+      "threshold": 0.3760009706020355
+    },
+    {
+      "outer_fold": 2,
+      "threshold": 0.7818639874458313
+    },
+    {
+      "outer_fold": 3,
+      "threshold": 0.3166795969009399
+    },
+    {
+      "outer_fold": 4,
+      "threshold": 0.8076737523078918
+    },
+    {
+      "outer_fold": 5,
+      "threshold": 0.3211951851844787
+    }
+  ],
+  "point_metrics": {
+    "accuracy": 0.7264957264957265,
+    "auroc": 0.7079831932773111,
+    "auprc": 0.6261404819852965,
+    "sensitivity": 0.6938775510204082,
+    "specificity": 0.75,
+    "precision": 0.6666666666666666,
+    "recall": 0.6938775510204082,
+    "f1": 0.68,
+    "tn": 51,
+    "fp": 17,
+    "fn": 15,
+    "tp": 34
+  },
+  "confidence_intervals": [
+    {
+      "metric": "accuracy",
+      "estimate": 0.7264957264957265,
+      "ci_lower": 0.6410256410256411,
+      "ci_upper": 0.8034188034188035
+    },
+    {
+      "metric": "auroc",
+      "estimate": 0.7079831932773111,
+      "ci_lower": 0.6096052765736025,
+      "ci_upper": 0.802171861307135
+    },
+    {
+      "metric": "auprc",
+      "estimate": 0.6261404819852965,
+      "ci_lower": 0.4929221469120605,
+      "ci_upper": 0.755089244608396
+    },
+    {
+      "metric": "sensitivity",
+      "estimate": 0.6938775510204082,
+      "ci_lower": 0.5581395348837209,
+      "ci_upper": 0.8222222222222222
+    },
+    {
+      "metric": "specificity",
+      "estimate": 0.75,
+      "ci_lower": 0.6428304904051173,
+      "ci_upper": 0.8529411764705882
+    },
+    {
+      "metric": "precision",
+      "estimate": 0.6666666666666666,
+      "ci_lower": 0.5319148936170213,
+      "ci_upper": 0.7959183673469388
+    },
+    {
+      "metric": "recall",
+      "estimate": 0.6938775510204082,
+      "ci_lower": 0.5581395348837209,
+      "ci_upper": 0.8222222222222222
+    },
+    {
+      "metric": "f1",
+      "estimate": 0.68,
+      "ci_lower": 0.5631067961165048,
+      "ci_upper": 0.7796610169491526
+    }
+  ]
+}

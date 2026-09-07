@@ -1,0 +1,39 @@
+{
+  "release": "patient_mil_v1",
+  "analysis_schema_version": "patient_mil_max_or_v1",
+  "analysis_unit": "patient",
+  "patients": 117,
+  "cme_positive_patients": 49,
+  "cme_negative_patients": 68,
+  "entry_point": "Root/src/nested_cv_pipeline.py",
+  "metric_calculation_script": "Root/src/recalculate_patient_metrics.py",
+  "configuration": "Root/configs/patient_mil_primary.json",
+  "sanitization_note": "The public copy changes only a patient-style identifier in a misc_utils.py documentation example, an unused legacy plotting helper's default output path, and synthetic identifiers in tests. Model, preprocessing, splitting, training, thresholding, and metric logic are unchanged. The hashes recorded at run time remain in patient_mil_primary.json.",
+  "source_sha256": {
+    "Root/src/nested_cv_pipeline.py": "d6bce322cb7190f006c8dbddf5f0921577738aaaf6052f4994a648c195f8f695",
+    "Root/src/recalculate_patient_metrics.py": "180926466f3125b8234d40a62f2877ce105858e90168cf25ed79e42dc6b7179a",
+    "Root/src/dataset/dataset.py": "242c21075e913b013f6ffd902d93b40d7a07c9faaaff34e589bdc93823872f1f",
+    "Root/src/model/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Root/src/model/model.py": "c9a9fb5c0b4e5e1e7742a6e23622a6bcc347258e5e3f674c3fa64c8439b0fa0e",
+    "Root/src/utils/misc_utils.py": "3f2e9a62a7267da1456e863e1548c7f185d8db53ae13f50dfba579848abe66ea",
+    "Root/src/utils/model_utils.py": "d782652598570672086a57f43eeb02e508174e9d1413bcbfc318c5fc5a059129",
+    "Root/src/utils/train.py": "349bf3738d667f27203d10c043a91835c510b86076c67dbb0621c3c90214897c",
+    "Root/src/utils/test.py": "bf7207a319106ee5ef917e913ed97688834ec20ea6ed3ba52dc883971cad0b7d",
+    "Root/src/utils/xai_utils.py": "59ce636842ca7b90c77e8045e88d0901bc336c3c84471e1a1d9f019a131658c0",
+    "Root/src/tests/test_nested_cv_pipeline.py": "bc4e167e736ceadfd50b1cb2874e09e8b022d0e7e50f58ff1059ee243851d258",
+    "Root/configs/patient_mil_primary.json": "b1adc96a41d0d0435f9006bb42368d18f5fba875207b0f14ac592d416eec399f",
+    "Root/requirements.txt": "316a788f2f795c9905d69ec234a6709090aa4d8ccc88658528b2c478a3e8d651",
+    "Root/environment.yml": "f86a7ffa755b17fab966a5ec8cf61845164650b0e8fcdb25f9a8bc0442db93b0",
+    "Root/scripts/run_patient_mil_primary.sh": "35db2ac724c61b6c97762454b85888b6aa14919a5f94d6050085e0fe4d0eba9b"
+  },
+  "artifact_sha256": {
+    "outer_test_predictions_deidentified.csv": "657ff781e460d8d38eadfa6c2f20343b33a77d6977c4cf163020ba14f4417907",
+    "metrics/recalculated_pooled_metrics.json": "d116a543891111f96c37913b2e2c3297597ebde82328e174957591d6c8cefaad",
+    "metrics/recalculated_patient_bootstrap_95ci.csv": "e7fd5afba06feb6aebada5355c3dc7a5fd30763e6b3024fe9760f4b128bbaa81",
+    "metrics/outer_fold_metrics.csv": "dd94cc6047aa9de47688c050f867250a68a772bd70f0af367d47744030749567",
+    "model_selection/Supplementary_Table_S1.xlsx": "8c4f21d5b090b302c8e40e3689601ef657fbd8d6c6f477fa9e61aec340158cb0",
+    "model_selection/all_inner_fold_metrics.csv": "a109c08669bff835b492d01f9893790e9184dc13f70156ecce8dcd570e575bb8",
+    "internal_benchmark/all_inner_benchmark_summaries.csv": "ea04bfddcfbf34067a06536bc1f1527dd9e2974bdc45c7ece7f809d7e0ac3716"
+  },
+  "checkpoint_sha256_file": "checkpoints/SHA256SUMS"
+}

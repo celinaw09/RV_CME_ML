@@ -24,6 +24,20 @@ env/
 .DS_Store
 Thumbs.db
 
+# Clinical data and identifier-bearing artifacts must never be added.
+data/
+Root/data/
+**/allpatients_resized/
+**/allpatients_resized.zip
+**/*patient_mapping*
+**/*identifier_mapping*
+
+# Local run outputs are excluded; the audited public subset lives under
+# Root/reproducibility/patient_mil_v1/.
+Root/experiment_logs/
+Root/src/experiment_logs/RV_CME_PATIENT_MIL_PRIMARY_MPS/
+Root/reproducibility/patient_mil_v1/recalculated_metrics/
+
 # =========================
 # Temporary arrays
 # =========================
